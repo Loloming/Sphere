@@ -32,19 +32,19 @@ sequelize.models = Object.fromEntries(capsEntries);
 // Para relacionarlos hacemos un destructuring
 const { User, Post, Comment, Follower, Like } = sequelize.models;
 // Aca vendrian las relaciones
-User.hasMany(Post, { through: 'User_Post' });
-Post.belongsTo(User, { foreignKey: 'user_id' });
+User.belongsToMany(Post, { through: 'User_Post' });
+// Post.hasOne(User, { foreignKey: 'user_id' });
 
-User.hasMany(Follower, { through: 'User_Follower' });
+User.belongsToMany(Follower, { through: 'User_Follower' });
 Follower.belongsTo(User);
 
-Post.hasMany(Like, { through: 'Post_Like' });
+Post.belongsToMany(Like, { through: 'Post_Like' });
 Like.belongsTo(Post, { foreignKey: 'post_id' });
 
-Comment.hasMany(Like, { through: 'Comment_Like' });
+Comment.belongsToMany(Like, { through: 'Comment_Like' });
 Like.belongsTo(Comment, { foreignKey: 'comment_id' });
 
-Post.hasMany(Comment, { foreignKey: 'user_id' });
+Post.belongsToMany(Comment, { through: 'Post_Comment' });
 Comment.belongsTo(Post, { foreignKey: 'user_id' });
 
 module.exports = {

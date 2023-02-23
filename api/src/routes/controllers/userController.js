@@ -34,8 +34,8 @@ const getUserById = async (req, res) => {
 
 const getUserByEmail = async (req, res) => {
   try {
-    const { mail } = req.body;
-    const user = await getModelsByEmail(User, mail);
+    const { email } = req.body;
+    const user = await getModelsByEmail(User, email);
     res.status(200).json(user);
   } catch (error) {
     res.status(400).json({ error: error.message });
