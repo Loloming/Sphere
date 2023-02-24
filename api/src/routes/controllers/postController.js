@@ -20,6 +20,7 @@ const getPost = async (req, res) => {
   }
 };
 
+
 const getPostById = async (req, res) => {
   try {
     const { id } = req.query;
@@ -32,12 +33,11 @@ const getPostById = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const { media, heading, content, date, user_id } = req.body;
+    const { media, heading, content, user_id } = req.body;
     const post = await postModels(Post, {
       media,
       heading,
-      content,
-      date
+      content
     });
     const user = await User.findOne({
       where: {

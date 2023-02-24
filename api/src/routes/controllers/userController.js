@@ -58,7 +58,7 @@ const registerUser = async (req, res) => {
     });
     if (user) {
       res.status(200).send("User registered!");
-      welcomeUser(name, mail);
+      // welcomeUser(name, mail);
     } else {
       res.status(400).send("User couldn't be created");
     }

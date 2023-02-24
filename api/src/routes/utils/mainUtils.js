@@ -1,27 +1,27 @@
-const {Product, Brand, Category, Sub_category} = require("../../db");
+const {Post, User, Like, Comment, Follower} = require("../../db");
 
 const getModels = async (model, name) => {
   let results;
 
   if (model) {
-    if (model === Product) {
+    if (model === Post) {
       if (name) {
         results = await model.findAll({
-          where: { name: name },
+          where: { name },
           include: [
             {
-              model: Brand,
-              attributes: ["id", "name"],
+              model: User,
+              attributes: ["id", "username"],
               through: {attributes: []},
             },
             {
-              model: Category,
-              attributes: ["id", "name"],
+              model: Like,
+              attributes: ["id", "user_id"],
               through: {attributes: []},
             },
             {
-              model: Sub_category,
-              attributes: ["id", "name"],
+              model: Comment,
+              attributes: ["id", "content", "media"],
               through: {attributes: []},
             },
           ],
@@ -30,18 +30,18 @@ const getModels = async (model, name) => {
         results = await model.findAll({
           include: [
             {
-              model: Brand,
-              attributes: ["id", "name"],
+              model: User,
+              attributes: ["id", "username"],
               through: {attributes: []},
             },
             {
-              model: Category,
-              attributes: ["id", "name"],
+              model: Like,
+              attributes: ["id", "user_id"],
               through: {attributes: []},
             },
             {
-              model: Sub_category,
-              attributes: ["id", "name"],
+              model: Comment,
+              attributes: ["id", "content", "media"],
               through: {attributes: []},
             },
           ],
@@ -56,24 +56,24 @@ const getModels = async (model, name) => {
         results = await model.findAll();
       }
     }
-    if (model === Product) {
+    if (model === Post) {
       if (name) {
         results = await model.findAll({
           where: { name: name },
           include: [
             {
-              model: Brand,
-              attributes: ["id", "name"],
+              model: User,
+              attributes: ["id", "username"],
               through: {attributes: []},
             },
             {
-              model: Category,
-              attributes: ["id", "name"],
+              model: Like,
+              attributes: ["id", "user_id"],
               through: {attributes: []},
             },
             {
-              model: Sub_category,
-              attributes: ["id", "name"],
+              model: Comment,
+              attributes: ["id", "content", "media"],
               through: {attributes: []},
             },
           ],
@@ -82,18 +82,18 @@ const getModels = async (model, name) => {
         results = await model.findAll({
           include: [
             {
-              model: Brand,
-              attributes: ["id", "name"],
+              model: User,
+              attributes: ["id", "username"],
               through: {attributes: []},
             },
             {
-              model: Category,
-              attributes: ["id", "name"],
+              model: Like,
+              attributes: ["id", "user_id"],
               through: {attributes: []},
             },
             {
-              model: Sub_category,
-              attributes: ["id", "name"],
+              model: Comment,
+              attributes: ["id", "content", "media"],
               through: {attributes: []},
             },
           ],
@@ -114,24 +114,6 @@ const getModels = async (model, name) => {
 
   return results;
 };
-
-// const getModels = async (model, name) => {
-//   let results;
-
-//   if (model) {
-//     if (name) {
-//       results = await model.findAll({
-//         where: { name: name },
-//       });
-//     } else {
-//       results = await model.findAll();
-//     }
-//   } else {
-//     return null;
-//   }
-
-//   return results;
-// };
 
 const getModelsById = async (model, id) => {
   let results;
