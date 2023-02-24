@@ -3,7 +3,6 @@ const postRouter = Router();
 
 const {
   getPost,
-  getPostByEmail,
   getPostById,
   createPost,
   putPost,
@@ -14,8 +13,6 @@ const {
 postRouter.get("/getPost", getPost);
 
 postRouter.get("/getPostById", getPostById);
-
-postRouter.get("/getPostByEmail", getPostByEmail);
 
 postRouter.post("/createPost", createPost)
 
