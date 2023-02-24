@@ -1,4 +1,4 @@
-const { User } = require("../../db");
+const { User, Follower, Post, Like, Comment } = require("../../db");
 const bcryptjs = require("bcryptjs");
 const {
   getModels,
@@ -15,7 +15,16 @@ const { welcomeUser } = require("../../mails/mails");
 const getUser = async (req, res) => {
   try {
     const { name } = req.query;
-    const users = await getModels(User, name);
+    const users = await User.findAll({
+      include: [
+        {
+          model: Follower
+        },
+        {
+          model: Post
+        }
+      ]
+    })
     res.status(200).json(users);
   } catch (error) {
     res.status(400).json({ error: error.message });

@@ -1,19 +1,30 @@
-const { Post, User } = require("../../db");
+const { Post, User, Comment, Like } = require("../../db");
 const bcryptjs = require("bcryptjs");
 const {
-  getModels,
-  getModelsById,
   postModels,
   putModels,
   deleteModels,
   restoreModels,
-  getModelsByEmail,
 } = require("../utils/mainUtils");
 
 const getPost = async (req, res) => {
   try {
     const { heading } = req.query;
-    const posts = await getModels(Post, heading);
+    const posts = heading ? await Post.findAll({
+      where: {
+        heading
+      }
+    }) : await Post.findAll({
+      include: [
+        {
+          model: Comment,
+          attributes: ['id', 'content', 'media', 'user_id']
+        },
+        {
+          model: Like
+        }
+      ]
+    })
     res.status(200).json(posts);
   } catch (error) {
     res.status(400).json({ error: error.message });
