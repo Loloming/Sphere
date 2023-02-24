@@ -12,8 +12,8 @@ const {
 
 const getPost = async (req, res) => {
   try {
-    const { name } = req.query;
-    const posts = await getModels(Post, name);
+    const { heading } = req.query;
+    const posts = await getModels(Post, heading);
     res.status(200).json(posts);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -24,16 +24,6 @@ const getPostById = async (req, res) => {
   try {
     const { id } = req.query;
     const post = await getModelsById(Post, id);
-    res.status(200).json(post);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
-
-const getPostByEmail = async (req, res) => {
-  try {
-    const { email } = req.body;
-    const post = await getModelsByEmail(Post, email);
     res.status(200).json(post);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -97,7 +87,6 @@ const restorePost = async (req, res) => {
 
 module.exports = {
   getPost,
-  getPostByEmail,
   getPostById,
   createPost,
   putPost,
