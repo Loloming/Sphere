@@ -5,10 +5,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'ultra-violet': '#441c82',
-        'background': '#262626'
+        'thirty-percent': '#220F3A',
+        'sixty-percent': '#101010',
+        'ten-percent': '#8B30FF'
       }
     },
   },
   plugins: [],
 }
+
