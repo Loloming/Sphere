@@ -66,10 +66,14 @@ const registerUser = async (req, res) => {
       is_private,
     });
     if (user) {
-      res.status(200).send("User registered!");
+      res.status(200).json({
+        response: "User registered!"
+      });
       // welcomeUser(name, mail);
     } else {
-      res.status(400).send("User couldn't be created");
+      res.status(400).json({
+        response: "User couldn't be created"
+      });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });

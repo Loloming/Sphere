@@ -1,3 +1,5 @@
+import { GET_POSTS, LOGIN_USER, LOGOUT_USER, REGISTER_USER } from "../actions/actions";
+
 const initialState = {
     user: [],
     posts: []
