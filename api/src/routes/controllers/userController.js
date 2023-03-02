@@ -88,13 +88,20 @@ const loginUser = async (req, res) => {
     if (user[0]) {
       const compare = await bcryptjs.compare(password, user[0].password);
       if (compare) {
-        res.status(200).send("User logged!");
+        res.status(200).json({
+          user: user[0],
+          response: "User logged!"
+        });
       } else {
-        res.status(400).send("Wrong password!");
+        res.status(400).json({
+          response: "Wrong password!"
+        });
       }
     } 
     else {
-      res.status(400).send("Email doesn't exist!");
+      res.status(400).json({
+        response: "Email doesn't exist!"
+      });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });

@@ -11,6 +11,6 @@ export default function Register() {
     })
 
     return (
-       <h1>Register component</h1>
+       <h1>This is the register component</h1>
     )
 }
