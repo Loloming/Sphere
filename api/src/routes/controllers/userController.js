@@ -55,24 +55,35 @@ const registerUser = async (req, res) => {
   try {
     const { username, name, lastname, email, password, profile_picture, is_private } =
       req.body;
-    const passwordHash = await bcryptjs.hash(password, 8);
-    const user = await postModels(User, {
-      username,
-      name,
-      lastname,
-      email,
-      password: passwordHash,
-      profile_picture,
-      is_private,
-    });
-    if (user) {
-      res.status(200).send("User registered!");
-      // welcomeUser(name, mail);
-    } else {
-      res.status(400).send("User couldn't be created");
+    if (!name || !email || !password) {
+      res.status(401).json({
+        response: "Missing data!"
+      })
+    }
+    else {
+      const passwordHash = await bcryptjs.hash(password, 8);
+      const user = await postModels(User, {
+        username,
+        name,
+        lastname,
+        email,
+        password: passwordHash,
+        profile_picture,
+        is_private,
+      });
+      if (user) {
+        res.status(200).json({
+          response: "User registered!"
+        });
+        // welcomeUser(name, mail);
+      } else {
+        res.status(401).json({
+          response: "User couldn't be created"
+        });
+      }
     }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(401).json({ error: error.message });
   }
 };
 
@@ -88,13 +99,20 @@ const loginUser = async (req, res) => {
     if (user[0]) {
       const compare = await bcryptjs.compare(password, user[0].password);
       if (compare) {
-        res.status(200).send("User logged!");
+        res.status(200).json({
+          user: user[0],
+          response: "User logged!"
+        });
       } else {
-        res.status(400).send("Wrong password!");
+        res.status(401).json({
+          response: "Wrong password!"
+        });
       }
     } 
     else {
-      res.status(400).send("Email doesn't exist!");
+      res.status(401).json({
+        response: "Email doesn't exist!"
+      });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
