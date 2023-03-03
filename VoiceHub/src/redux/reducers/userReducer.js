@@ -2,11 +2,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
 
-const LOGIN_URL = "http://localhost:3001/users/loginUser";
-const REGISTER_URL = "http://localhost:3001/users/registerUser";
+const LOGIN_URL = "http://localhost:6942/users/loginUser";
+const REGISTER_URL = "http://localhost:6942/users/registerUser";
 
 export const loginUser = createAsyncThunk(
-  'users/login',
+  'user/login',
   async (payload) => {
     try {
       const response = await axios.post(
@@ -21,7 +21,7 @@ export const loginUser = createAsyncThunk(
 );
 
 export const registerUser = createAsyncThunk(
-  'users/register',
+  'user/register',
   async (payload) => {
     try {
       const response = await axios.post(
@@ -54,7 +54,7 @@ export const userSlice = createSlice({
         .addCase(loginUser.fulfilled, (state, action) => {
           state.status = 'succeeded';
           if (action.payload.error) {
-            action.payload.setMessage(action.payload.error.response.data.response);
+            action.payload.setMessage(action.payload.error.data);
             state.error = action.payload.error.message
           }
           else {
@@ -86,12 +86,11 @@ export const userSlice = createSlice({
           action.payload.setMessage(action.payload.error.response.data.response)
           state.error = action.error.message;
         })
-
   }
 })
 
-export const getUserLogged = (state) => state.userReducer.userLogged;
-export const getUserError = (state) => state.userReducer.error;
-export const getUserStatus = (state) => state.userReducer.status;
+export const getUserLogged = (state) => state.user.userLogged;
+export const getUserError = (state) => state.user.error;
+export const getUserStatus = (state) => state.user.status;
 
 export default userSlice.reducer
