@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../../redux/reducers/userReducer";
 
 export default function Register({setForm}) {
 
@@ -11,7 +13,17 @@ export default function Register({setForm}) {
         password: ''
     });
 
+    const dispatch = useDispatch();
+
     const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        if (message === "User registered!") {
+            setTimeout(() => {
+                setForm('login')
+            }, 1000)
+        }
+    }, [message])
 
     function handleChange(e) {
         setUser({...user, [e.target.name]: e.target.value})
@@ -21,15 +33,8 @@ export default function Register({setForm}) {
     async function handleSubmit(e) {
         try {
             e.preventDefault();
-            const result = await axios.post('http://localhost:3001/users/registerUser', user);
-            setMessage(result.data.response)
-            if (result.data.response === "User registered!") {
-                setTimeout(() => {
-                    setForm('login')
-                }, 1000)
-            }
+            dispatch(registerUser({user, setMessage}))
         } catch (error) {
-            console.log(error)
             setMessage(error.response.data.response)
         }
     }
@@ -37,7 +42,6 @@ export default function Register({setForm}) {
     function handleClick(e) {
         e.preventDefault()
         setForm('login')
-        console.log('done')
     }
 
     return (
