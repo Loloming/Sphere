@@ -9,7 +9,7 @@ export default function LandinPage() {
 
   return (
     <>
-      <article className="flex flex-col h-full justify-center pl-3 pt-5 bg-gradient-to-tr from-sixty-percent via-thirty-percent to-sixty-percent min-h-screen">
+      <div className="flex flex-col h-full justify-center pl-3 pt-5 bg-gradient-to-tr from-sixty-percent via-thirty-percent to-sixty-percent min-h-screen">
         <h3 className="text-5xl font-semibold text-teal-50">
           An amazing app based on audio and streaming.
         </h3>
@@ -19,7 +19,7 @@ export default function LandinPage() {
             form === 'register' ? <Register setForm={setForm}/> : <Login setForm={setForm}/>
           }
         </aside>
-      </article>
+      </div>
     </>
   );
 }

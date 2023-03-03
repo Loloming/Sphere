@@ -1,9 +1,13 @@
 import React from "react";
-import axios from "axios";
+import "../../App.css";
+import Header from "../Header/Header";
 
 export default function Home() {
 
     return (
-        <h1>This is the Home component</h1>
+        <div className="flex flex-col h-full justify-start bg-sixty-percent min-h-screen">
+            <Header />
+            
+        </div>
     )
 }
