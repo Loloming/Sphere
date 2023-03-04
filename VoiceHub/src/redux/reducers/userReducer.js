@@ -2,8 +2,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const LOGIN_URL = "http://localhost:6942/users/loginUser";
-const REGISTER_URL = "http://localhost:6942/users/registerUser";
+const LOGIN_URL = "http://localhost:3001/users/loginUser";
+const REGISTER_URL = "http://localhost:3001/users/registerUser";
 
 export const loginUser = createAsyncThunk(
   "user/login", 
@@ -51,8 +51,9 @@ export const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = "succeeded";
+  
         if (action.payload.error) {
-          action.payload.setMessage(action.payload.error.data);
+          action.payload.setMessage(action.payload.error.response.data.response);
           state.error = action.payload.error.message;
         } else {
           action.payload.setMessage(action.payload.data.response);
@@ -61,6 +62,7 @@ export const userSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
+  
         action.payload.setMessage(action.payload.error.response.data.response);
         state.error = action.error.message;
       })
