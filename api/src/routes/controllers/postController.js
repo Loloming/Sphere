@@ -22,7 +22,7 @@ const getPost = async (req, res) => {
         },
         {
           model: Like
-        }
+        },
       ]
     })
     res.status(200).json(posts);

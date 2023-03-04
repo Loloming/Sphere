@@ -18,8 +18,8 @@ export default function Profile() {
                 <div className="w-full flex flex-row justify-center mb-1">
                     <h2 className="text-teal-50 font-semibold text-xl">Loloming</h2>
                 </div>
-                <div className="w-full flex flex-row text-center">
-                    <p className="text-neutral-300 inline-block font-medium">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus error adipisci,
+                <div className="w-full flex flex-row justify-center">
+                    <p className="text-neutral-300 inline-block font-medium text-center">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus error adipisci,
                     earum distinctio minus ullam aliquam minima quaerat hic suscipit deleniti tempore enim ipsum iure necessitatibus
                     magnam numquam commodi vel?</p>
                 </div>
