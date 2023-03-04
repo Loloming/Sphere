@@ -7,13 +7,12 @@ import Post from '../Post/Post'
 const Posts = () => {
 
   const posts = useSelector(getAllPosts)
-  console.log(posts)
 
   return (
     <div className='flex p-10 flex-col gap-8'>
-      {posts?.map(post => {
+      {posts?.map((post, id) => {
         return (
-          <Post post={post} />
+          <Post key={id} post={post} />
         )
       })}
     </div>
