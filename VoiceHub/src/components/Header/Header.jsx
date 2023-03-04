@@ -11,8 +11,8 @@ export default function Header() {
     const IMG = "http://www.clipartbest.com/cliparts/niB/Mx8/niBMx87xT.gif";
 
     return (
-        <header className="bg-sixty-percent-variant shadow-xl flex flex-row flex-nowrap h-20 justify-between align-top pt-3 px-5">
-            <Logo onClick={() => navigate('/home')}/>
+        <header className="bg-sixty-percent-variant shadow-xl z-50 flex flex-row flex-nowrap h-16 justify-between items-center px-5 min-w-full">
+            <Logo />
             <SearchBar />
             <img className="rounded-full h-11 w-12" src={IMG}></img>
         </header>

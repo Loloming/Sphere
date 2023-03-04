@@ -8,6 +8,8 @@ module.exports = {
         'thirty-percent': '#220F3A',
         'sixty-percent': '#101010',
         'sixty-percent-variant': '#212121',
+        'sixty-percent-banner': '#171717',
+        'sixty-percent-home': '#121212',
         'ten-percent': '#8B30FF'
       }
     },
