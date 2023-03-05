@@ -46,7 +46,6 @@ export default function Profile() {
                     magnam numquam commodi vel?</p>
                 </div>
             </div>
-            
         </div>
     )
 }

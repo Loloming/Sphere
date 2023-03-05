@@ -2,8 +2,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const LOGIN_URL = "http://localhost:3001/users/loginUser";
-const REGISTER_URL = "http://localhost:3001/users/registerUser";
+const LOGIN_URL = "http://localhost:6942/users/loginUser";
+const REGISTER_URL = "http://localhost:6942/users/registerUser";
 
 export const loginUser = createAsyncThunk(
   "user/login", 
