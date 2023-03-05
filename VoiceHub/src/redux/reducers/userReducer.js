@@ -51,8 +51,9 @@ export const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = "succeeded";
+  
         if (action.payload.error) {
-          action.payload.setMessage(action.payload.error.data);
+          action.payload.setMessage(action.payload.error.response.data.response);
           state.error = action.payload.error.message;
         } else {
           action.payload.setMessage(action.payload.data.response);
@@ -61,6 +62,7 @@ export const userSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
+  
         action.payload.setMessage(action.payload.error.response.data.response);
         state.error = action.error.message;
       })
