@@ -2,8 +2,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const LOGIN_URL = "http://localhost:6942/users/loginUser";
-const REGISTER_URL = "http://localhost:6942/users/registerUser";
+const { VITE_PORT } = import.meta.env;
+const LOGIN_URL = `http://localhost:${VITE_PORT}/users/loginUser`;
+const REGISTER_URL = `http://localhost:${VITE_PORT}/users/registerUser`;
 
 export const loginUser = createAsyncThunk(
   "user/login", 

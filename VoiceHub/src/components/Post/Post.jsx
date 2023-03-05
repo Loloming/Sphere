@@ -6,7 +6,8 @@ import { AiFillLike } from "react-icons/ai";
 import { AiOutlineLike } from "react-icons/ai";
 
 const Post = ({ post }) => {
-  const { media, heading, content, id, Comments, Likes, createdAt } = post;
+  const { Images, content, id, Comments, Likes, createdAt, Videos, Audio } = post;
+  console.log(post)
 
   const format = createdAt.split("-")[2];
 
@@ -41,7 +42,7 @@ const Post = ({ post }) => {
             </p>
             <p className="text-slate-600 text-xs">{form}</p>
           </div>
-          {media && <img src={media} alt="noimg" className="rounded-lg" />}
+          {Images && <img src={Images[0].url} alt="noimg" className="rounded-lg" />}
           <div className="mt-4 rounded-md p-2 flex justify-between">
             <p className="text-slate-400 text-sm w-5/6">{content}</p>
             <button>
@@ -54,7 +55,7 @@ const Post = ({ post }) => {
             </button>
             {like ? (
               <button onClick={() => liker()}>
-                <AiFillLike className="text-ten-percent" size={25} />
+                <AiFillLike className="text-ten-percent animate-like" size={25} />
               </button>
             ) : (
               <button onClick={() => liker()}>
