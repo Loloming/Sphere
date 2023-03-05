@@ -1,4 +1,4 @@
-const { Post, User, Comment, Like } = require("../../db");
+const { Post, User, Comment, Like, Image, Video, Audio } = require("../../db");
 const bcryptjs = require("bcryptjs");
 const {
   postModels,
@@ -18,11 +18,31 @@ const getPost = async (req, res) => {
       include: [
         {
           model: Comment,
-          attributes: ['id', 'content', 'media', 'user_id']
+          attributes: ['id', 'content', 'user_id'],
+          include: [
+            {
+              model: Like
+            },
+            {
+              model: Image
+            },
+            {
+              model: Video
+            },
+            {
+              model: Audio
+            }
+          ]
         },
         {
           model: Like
-        }
+        },
+        {
+          model: Image
+        },
+        {
+          model: Video
+        },
       ]
     })
     res.status(200).json(posts);
@@ -44,18 +64,33 @@ const getPostById = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const { media, heading, content, user_id } = req.body;
-    const post = await postModels(Post, {
-      media,
-      heading,
-      content
+    const { images, videos, audio, content, user_id } = req.body;
+    const post = await Post.create({
+      content,
+      UserId: user_id
     });
-    const user = await User.findOne({
-      where: {
-        id: user_id
-      }
-    })
-    await user.addPost(post)
+    if (images) {
+      images.map(async i => {
+        const image = await Image.create({
+          url: i.url
+        })
+        await post.addImage(image)
+      });
+    };
+    if (videos) {
+      videos.map(async v => {
+        const video = await Video.create({
+          url: v.url
+        })
+        await post.addVideo(video)
+      });
+    };
+    if (audio) {
+      const audio_ = await Audio.create({
+        url: audio
+      })
+      await post.setAudio(audio_)
+    };
     if (post) {
       res.status(200).send("Succesfully posted!");
     } else {

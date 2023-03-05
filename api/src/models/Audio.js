@@ -2,11 +2,11 @@ const { DataTypes, Sequelize } = require("sequelize");
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "Post",
+    "Audio",
     {
-      content: {
+      url: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: false
       },
     },
     {

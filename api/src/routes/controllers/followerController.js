@@ -1,4 +1,4 @@
-const { Comment, Post, User, Follower } = require("../../db");
+const { Comment, Post, User, Follow } = require("../../db");
 const {
   postModels,
   putModels,
@@ -9,7 +9,7 @@ const {
 const getFollower = async (req, res) => {
   try {
     const { name } = req.query;
-    const follower = await Follower.findAll({
+    const follower = await Follow.findAll({
     })
     res.status(200).json(follower);
   } catch (error) {
@@ -18,11 +18,67 @@ const getFollower = async (req, res) => {
 };
 
 
-const getFollowerById = async (req, res) => {
+const getFollowersById = async (req, res) => {
   try {
     const { id } = req.query;
-    const follower = await getModelsById(Follower, id);
-    res.status(200).json(Follower);
+    console.log(id)
+    const follower = await Follow.findAll({
+      where: {
+        followingId: id
+      },
+      include:
+        {
+          model: User,
+          attributes: ['username'],
+          as: 'follower'
+        }
+    });
+
+    const response = {
+      quantity: follower.length,
+      followers: follower.map(f => {
+        return {
+          follow_id: f.id,
+          username: f.follower.username,
+          user_id: f.followerId
+        }
+      })
+    }
+
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const getFollowingById = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    const follower = await Follow.findAll({
+      where: {
+        followerId: id
+      },
+      include:
+        {
+          model: User,
+          attributes: ['username'],
+          as: 'following'
+        }
+    });
+
+    const response = {
+      quantity: follower.length,
+      following: follower.map(f => {
+        return {
+          follow_id: f.id,
+          username: f.following.username,
+          user_id: f.followingId
+        }
+      })
+    }
+
+    res.status(200).json(response);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -32,19 +88,12 @@ const createFollower = async (req, res) => {
   try {
     const { follower_id, user_id,} = req.body;
 
-    const follower = await postModels(Follower, {
-      user_id: follower_id
+    const follower = await postModels(Follow, {
+      followerId: user_id,
+      followingId: follower_id
     });
 
-    const user = await User.findOne({
-      where: {
-        id: user_id
-      }
-    })
-
-    await user.addFollower(follower);
-
-    if (Follower) {
+    if (follower) {
       res.status(200).send("Succesfully followed!");
     } else {
       res.status(400).send("User couldn't be followed");
@@ -58,7 +107,7 @@ const createFollower = async (req, res) => {
 const deleteFollower = async (req, res) => {
   try {
     const { id } = req.body;
-    const updated = await deleteModels(Follower, id);
+    const updated = await deleteModels(Follow, id);
     res.status(200).json(updated);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -68,7 +117,7 @@ const deleteFollower = async (req, res) => {
 const restoreFollower = async (req, res) => {
   try {
     const { id } = req.body;
-    const restored = await restoreModels(Follower, id);
+    const restored = await restoreModels(Follow, id);
     res.status(200).json(restored);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -77,7 +126,8 @@ const restoreFollower = async (req, res) => {
 
 module.exports = {
   getFollower,
-  getFollowerById,
+  getFollowersById,
+  getFollowingById,
   createFollower,
   deleteFollower,
   restoreFollower

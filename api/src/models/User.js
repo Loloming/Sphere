@@ -5,19 +5,20 @@ module.exports = (sequelize) => {
     "User",
     {
       username: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
+        unique: true,
         allowNull: false
       },
       name: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: false
       },
       lastname: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: true
       },
       email: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: false
       },
       password: {
@@ -27,6 +28,15 @@ module.exports = (sequelize) => {
       profile_picture: {
         type: DataTypes.STRING,
         allowNull: true,
+      },
+      banner: {
+        type: DataTypes.STRING,
+        defaultValue: "https://blogs.iadb.org/conocimiento-abierto/wp-content/uploads/sites/10/2019/06/banner-programacion-creativa-p5js.png"
+      },
+      description: {
+        type: DataTypes.STRING,
+        defaultValue: 'Hi there! I am using VoiceHub',
+        allowNull: false,
       },
       is_private: {
         type: DataTypes.BOOLEAN,
