@@ -1,4 +1,4 @@
-const { User, Follower, Post, Like, Comment } = require("../../db");
+const { User, Follow, Post, Like, Comment } = require("../../db");
 const bcryptjs = require("bcryptjs");
 const {
   getModels,
@@ -16,14 +16,6 @@ const getUser = async (req, res) => {
   try {
     const { name } = req.query;
     const users = await User.findAll({
-      include: [
-        {
-          model: Follower
-        },
-        {
-          model: Post
-        }
-      ]
     })
     res.status(200).json(users);
   } catch (error) {

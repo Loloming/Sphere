@@ -27,21 +27,27 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { User, Post, Comment, Follower, Like } = sequelize.models;
+const { User, Post, Comment, Follow, Like, Image, Video, Audio } = sequelize.models;
 
-User.belongsToMany(Post, { through: 'User_Post' });
 
-User.belongsToMany(Follower, { through: 'User_Follower' });
 
-Post.belongsToMany(Like, { through: 'Post_Like' });
+User.hasMany(Follow, { foreignKey: 'followerId'});
 
-Post.belongsToMany(Comment, { through: 'Post_Comment' });
+Follow.belongsTo(User, { foreignKey: 'followingId', as: 'following'});
+Follow.belongsTo(User, { foreignKey: 'followerId', as: 'follower'});
 
-Comment.belongsToMany(Like, { through: 'Comment_Like' });
+Post.belongsToMany(Like, { through: 'Post_Like', onDelete: 'cascade'});
+Post.belongsToMany(Image, { through: 'Post_Image', onDelete: 'cascade'});
+Post.belongsToMany(Video, { through: 'Post_Video', onDelete: 'cascade'});
+Post.hasOne(Audio, { onDelete: 'cascade' });
+Post.belongsToMany(Comment, { through: 'Post_Comment', onDelete: 'cascade'});
+Post.belongsTo(User);
 
+Comment.belongsToMany(Like, { through: 'Comment_Like', onDelete: 'cascade'});
+Comment.belongsToMany(Image, { through: 'Comment_Image', onDelete: 'cascade'});
+Comment.hasOne(Video, { onDelete: 'cascade' });
+Comment.hasOne(Audio, { onDelete: 'cascade' });
 Comment.belongsTo(User, { foreignKey: 'user_id' });
-
-
 
 module.exports = {
   ...sequelize.models, 

@@ -3,7 +3,8 @@ const followerRouter = Router();
 
 const {
   getFollower,
-  getFollowerById,
+  getFollowersById,
+  getFollowingById,
   createFollower,
   deleteFollower,
   restoreFollower
@@ -11,7 +12,9 @@ const {
 
 followerRouter.get("/getFollower", getFollower);
 
-followerRouter.get("/getFollowerById", getFollowerById);
+followerRouter.get("/getFollowersById", getFollowersById);
+
+followerRouter.get("/getFollowingById", getFollowingById);
 
 followerRouter.post("/createFollower", createFollower)
 
