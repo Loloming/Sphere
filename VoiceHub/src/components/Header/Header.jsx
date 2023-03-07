@@ -1,12 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router";
-import "../../App.css";
 import Logo from "../Logo/Logo";
 import SearchBar from "../SearchBar/SearchBar";
 
 export default function Header() {
-
-    const navigate = useNavigate()
 
     const IMG = "http://www.clipartbest.com/cliparts/niB/Mx8/niBMx87xT.gif";
 

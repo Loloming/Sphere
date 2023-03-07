@@ -1,15 +1,16 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { getAllPosts, getPosts } from '../../redux/reducers/postReducer'
+import { getAllPosts } from '../../redux/reducers/postReducer'
 import Post from '../Post/Post'
 
 
 const Posts = () => {
 
   const posts = useSelector(getAllPosts)
+  console.log(posts)
 
   return (
-    <div className='flex p-10 flex-col gap-8'>
+    <div className='flex flex-col w-full my-3 items-center'>
       {posts?.map((post, id) => {
         return (
           <Post key={id} post={post} />
