@@ -14,7 +14,6 @@ module.exports = {
         'ten-percent': '#8B30FF'
       },
       gridTemplateColumns: {
-        // Simple 16 column grid
         'posts': '1fr 5fr 1fr',
       }
     },
