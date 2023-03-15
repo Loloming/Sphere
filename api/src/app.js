@@ -4,11 +4,15 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const routes= require('./routes/index.js');
 const cors = require('cors');
+const socket = require("./socket")
+const http = require('http')
 require('dotenv').config();
 
 require('./db.js');
 
 const server = express();
+const httpServer = http.createServer(server);
+socket(httpServer);
 
 server.name = 'API';
 
@@ -30,4 +34,4 @@ server.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   res.status(status).send(message);
 });
 
-module.exports = server;
+module.exports = httpServer;
