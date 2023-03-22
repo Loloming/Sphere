@@ -7,7 +7,7 @@ import Post from '../Post/Post'
 const Posts = () => {
 
   const posts = useSelector(getAllPosts)
-  console.log(posts)
+  // console.log(posts)
 
   return (
     <div className='flex flex-col w-full my-3 items-center'>

@@ -11,7 +11,13 @@ const {
 const getChat = async (req, res) => {
   try {
     const { content } = req.query;
-    const chat = await Chat.findAll();
+    const chat = await Chat.findAll({
+      include: [
+        {
+          model: User
+        }
+      ]
+    });
     res.status(200).json(chat);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -40,6 +46,9 @@ const getChatById = async (req, res) => {
               model: Image
             }
           ]
+        },
+        {
+          model: User
         }
       ]
     });

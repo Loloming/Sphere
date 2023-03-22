@@ -7,7 +7,7 @@ import { AiOutlineLike } from "react-icons/ai";
 
 const Post = ({ post }) => {
   const { content, id, Images, Comments, Likes, createdAt } = post;
-  console.log(post)
+  // console.log(post)
 
   const format = createdAt.split("-")[2];
 

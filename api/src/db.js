@@ -56,6 +56,7 @@ Message.hasOne(Video, { onDelete: 'cascade' });
 Message.hasOne(Audio, { onDelete: 'cascade' });
 
 Chat.hasMany(Message);
+Chat.belongsToMany(User, { through: 'User_Chat' });
 
 module.exports = {
   ...sequelize.models, 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Cookies from 'js-cookie'
 import '../../App.css'
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector }from 'react-redux'
@@ -13,19 +14,23 @@ export default function Login({setForm}) {
     });
 
     const [message, setMessage] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const userLogged = useSelector(getUserLogged);
-    // const userError = useSelector(getUserError);
-    // const userStatus = useSelector(getUserStatus);
 
     useEffect(() => {
-        if (userLogged[0]) {
-            setTimeout(() => {
-                navigate('/home')
-            }, 1200)
+        if (userLogged[0] && rememberMe) {
+            const uT = JSON.stringify(user)
+            Cookies.set('uT', uT, {expires: 30});
+            console.log('cookie')
+            navigate('/home');
+        }
+        else if (userLogged[0]) {
+            console.log('hola')
+            navigate('/home');
         }
     }, [userLogged])
 
@@ -57,6 +62,10 @@ export default function Login({setForm}) {
                     <input className="bg-teal text-black m-4 p-1 rounded-md focus-visible:outline-none" type={'password'} name= 'password' value={user.password} onChange={handleChange} placeholder='Password'/>
                     <button className="bg-ten-percent m-3 w-20 rounded-md mx-auto hover:bg-violet-500 focus-visible:outline-none font-semibold text-teal-50">Login</button>
                 </div>
+                <label className="text-teal-50 flex flex-row justify-center mb-1">
+                    <input className="mx-1" type="checkbox" onChange={() => setRememberMe(!rememberMe)} />
+                    Remember me
+                </label>
                 <p className="text-teal-50 text-xs mx-auto mt-auto ">Don't have an account? <a className="font-semibold text-ten-percent" onClick={handleClick} href="">Register here</a></p>
             </form>
     )
