@@ -24,7 +24,7 @@ export default function Login({setForm}) {
     useEffect(() => {
         if (userLogged[0] && rememberMe) {
             const uT = JSON.stringify(user)
-            Cookies.set('uT', uT, {expires: 30});
+            Cookies.set('uT', uT, {expires: 30, secure: true});
             console.log('cookie')
             navigate('/home');
         }
