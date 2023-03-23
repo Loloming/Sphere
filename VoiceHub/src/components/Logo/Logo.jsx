@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 const Logo = () => {
   const navigate = useNavigate()
   return (
-    <div onClick={() => {navigate('/')}}>
+    <div onClick={() => {navigate('/home')}}>
       <svg
         className="cursor-pointer"
         width="50"
