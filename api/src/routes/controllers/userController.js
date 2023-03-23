@@ -1,4 +1,4 @@
-const { User, Follow, Post, Like, Comment } = require("../../db");
+const { User, Chat, Follow, Post, Like, Comment } = require("../../db");
 const bcryptjs = require("bcryptjs");
 const {
   getModels,
@@ -86,6 +86,11 @@ const loginUser = async (req, res) => {
       where: {
         email
       },
+      include: [
+        {
+          model: Chat
+        }
+      ]
     });
 
     if (user[0]) {

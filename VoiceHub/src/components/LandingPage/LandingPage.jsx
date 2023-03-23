@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import "../../App.css";
 import Login from "../Login/Login";
 import Register from "../Register/Register";
+import io from 'socket.io-client';
 
 export default function LandinPage() {
 
   const [form, setForm] = useState('login');
+
+  const socket = io('http://localhost:3001');
 
   return (
     <>

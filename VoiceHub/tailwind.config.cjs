@@ -9,8 +9,12 @@ module.exports = {
         'sixty-percent': '#101010',
         'sixty-percent-variant': '#212121',
         'sixty-percent-banner': '#171717',
+        'sixty-percent-description': '#191919',
         'sixty-percent-home': '#121212',
         'ten-percent': '#8B30FF'
+      },
+      gridTemplateColumns: {
+        'posts': '1fr 5fr 1fr',
       }
     },
   },

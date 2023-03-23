@@ -1,9 +1,9 @@
-// import { GET_POSTS, LOGIN_USER, LOGOUT_USER, REGISTER_USER } from "../actions/actions";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const LOGIN_URL = "http://localhost:6942/users/loginUser";
-const REGISTER_URL = "http://localhost:6942/users/registerUser";
+const { VITE_PORT } = import.meta.env;
+const LOGIN_URL = `http://localhost:${VITE_PORT}/users/loginUser`;
+const REGISTER_URL = `http://localhost:${VITE_PORT}/users/registerUser`;
 
 export const loginUser = createAsyncThunk(
   "user/login", 
@@ -52,10 +52,14 @@ export const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = "succeeded";
   
-        if (action.payload.error) {
+        if (!action.payload.setMessage) {
+          state.userLogged = [action.payload.data.user]
+        }
+        else if (action.payload.error) {
           action.payload.setMessage(action.payload.error.response.data.response);
           state.error = action.payload.error.message;
-        } else {
+        }
+        else {
           action.payload.setMessage(action.payload.data.response);
           state.userLogged = [action.payload.data.user];
         }
