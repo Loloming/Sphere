@@ -7,7 +7,6 @@ import { AiOutlineLike } from "react-icons/ai";
 
 const Post = ({ post }) => {
   const { Images, content, id, Comments, Likes, createdAt, Videos, Audio } = post;
-  console.log(post)
 
   const format = createdAt.split("-")[2];
 
@@ -70,7 +69,7 @@ const Post = ({ post }) => {
               src={pp}
               className="w-6 mb-2 rounded-full bg-sixty-percent cursor-pointer"
             />
-            <input type="text" className="rounded-lg w-5/6 text-center bg-slate-300 focus:outline-none h-11" />
+            <input type="text" placeholder="Write a comment..." className="rounded-lg w-5/6 text-center bg-slate-300 focus:outline-none h-11 animate-expand" />
           </div>
         ) : (
           <></>

@@ -13,12 +13,17 @@ module.exports = {
         'ten-percent': '#8B30FF'
       },
       animation: {
-        like: 'like 0.3s ease-in-out'
+        like: 'like 0.5s ease-out',
+        expand: 'expand 0.5s ease'
       },
       keyframes: {
         like: {
           '0%, 100%': { transform: 'scale(1)'},
           '50%': { transform: 'scale(1.5)'}
+        },
+        expand: {
+          '0%': { width: '0'},
+          '100%': { width: '83.33%'}
         }
       },
     },
