@@ -51,7 +51,7 @@ export default function Chat() {
             }])
         }
         if (messages && !messages[0]) {
-            axios.get('http://localhost:3001/chats/getChatById?id=1')
+            axios.get(`http://localhost:3001/chats/getChatById?id=${chatId * 1}`)
             .then(r => {
                 let dbMessages = [];
                 setChat(r.data);
