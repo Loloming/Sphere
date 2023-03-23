@@ -9,23 +9,13 @@ module.exports = {
         'sixty-percent': '#101010',
         'sixty-percent-variant': '#212121',
         'sixty-percent-banner': '#171717',
+        'sixty-percent-description': '#191919',
         'sixty-percent-home': '#121212',
         'ten-percent': '#8B30FF'
       },
-      animation: {
-        like: 'like 0.5s ease-out',
-        expand: 'expand 0.5s ease'
-      },
-      keyframes: {
-        like: {
-          '0%, 100%': { transform: 'scale(1)'},
-          '50%': { transform: 'scale(1.5)'}
-        },
-        expand: {
-          '0%': { width: '0'},
-          '100%': { width: '83.33%'}
-        }
-      },
+      gridTemplateColumns: {
+        'posts': '1fr 5fr 1fr',
+      }
     },
   },
   plugins: [],
