@@ -11,6 +11,7 @@ export const getPosts = createAsyncThunk(
             const response = await axios.get(
                 POSTS_URL,
             )
+            console.log(response.data)
             return {
                 posts: response.data
             }

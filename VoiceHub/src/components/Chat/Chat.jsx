@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { getUserLogged } from "../../redux/reducers/userReducer";
+const { VITE_PORT } = import.meta.env;
 
 export default function Chat() {
 
@@ -13,11 +14,11 @@ export default function Chat() {
 
     const navigate = useNavigate();
 
-    if (!userLogged[0].Chats.filter(chat => chat.id === chatId * 1)[0]) {
+    if (userLogged[0] && !userLogged[0].Chats.filter(chat => chat.id === Number(chatId))[0]) {
         navigate('/')
     }
 
-    const socket = io('http://localhost:3001');
+    const socket = io(`http://localhost:${VITE_PORT}`);
 
     socket.emit('joinChat', chatId * 1)
 

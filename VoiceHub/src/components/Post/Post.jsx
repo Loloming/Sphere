@@ -55,7 +55,7 @@ const Post = ({ post }) => {
             </button>
             {like ? (
               <button onClick={() => liker()}>
-                <AiFillLike className="text-ten-percent" size={25} />
+                <AiFillLike className="text-ten-percent animate-like" size={25} />
               </button>
             ) : (
               <button onClick={() => liker()}>
@@ -70,7 +70,7 @@ const Post = ({ post }) => {
               src={pp}
               className="w-6 mb-2 rounded-full bg-sixty-percent cursor-pointer"
             />
-            <input type="text" className="rounded-lg w-5/6 text-center bg-slate-300 focus:outline-none h-11" />
+            <input type="text" placeholder="Write a comment..." className="rounded-lg w-5/6 text-center bg-slate-300 focus:outline-none h-11 animate-expand" />
           </div>
         ) : (
           <></>

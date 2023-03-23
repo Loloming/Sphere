@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const { VITE_PORT } = import.meta.env;
-
 const LOGIN_URL = `http://localhost:${VITE_PORT}/users/loginUser`;
 const REGISTER_URL = `http://localhost:${VITE_PORT}/users/registerUser`;
 

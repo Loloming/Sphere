@@ -28,7 +28,6 @@ function App() {
     }
     else if (cookieUser && userLogged[0]) {
       setValidation(true)
-      // navigate('/home')
     }
     else if (userLogged && userLogged[0]) {
       setValidation(true)
