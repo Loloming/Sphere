@@ -43,6 +43,9 @@ const getPost = async (req, res) => {
         {
           model: Video
         },
+        {
+          model: Audio
+        }
       ]
     })
     res.status(200).json(posts);

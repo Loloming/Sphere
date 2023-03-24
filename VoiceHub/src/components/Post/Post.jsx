@@ -4,10 +4,13 @@ import { FaPlayCircle } from "react-icons/fa";
 import { MdAddComment } from "react-icons/md";
 import { AiFillLike } from "react-icons/ai";
 import { AiOutlineLike } from "react-icons/ai";
+import { Image, Audio } from 'cloudinary-react';
 
 const Post = ({ post }) => {
   const { content, id, Images, Comments, Likes, createdAt } = post;
   // console.log(post)
+
+  const { VITE_CLOUD_NAME, VITE_POST_MEDIA_PRESET, VITE_PORT } = import.meta.env;
 
   const format = createdAt.split("-")[2];
 
@@ -42,7 +45,8 @@ const Post = ({ post }) => {
             </p>
             <p className="text-slate-600 text-xs">{form}</p>
           </div>
-          {Images[0] && <img src={Images[0].url} alt="noimg" className="rounded-lg" />}
+          {Images[0] && <Image cloudName={VITE_CLOUD_NAME} publicId={Images[0].url} alt="noimg" className="rounded-lg" />}
+          {post.Audio && <Audio cloudName={VITE_CLOUD_NAME} publicId={post.Audio.url} controls/>}
           <div className="mt-4 rounded-md p-2 flex justify-between">
             <p className="text-slate-400 text-sm w-5/6">{content}</p>
             <button>

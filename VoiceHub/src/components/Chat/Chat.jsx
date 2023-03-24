@@ -50,6 +50,37 @@ export default function Chat() {
     setMessage("");
   }
 
+    useEffect(() => {
+        function receiveMessage(message) {
+            setMessages([...messages, {
+                user: message.id,
+                content: message.messageData.content
+            }])
+        }
+        if (messages && !messages[0]) {
+            axios.get(`http://localhost:3001/chats/getChatById?id=${chatId * 1}`)
+            .then(r => {
+                let dbMessages = [];
+                setChat(r.data);
+                r.data.Messages.map(m => {
+                    dbMessages.push({
+                        user: m.UserId,
+                        content: m.content
+                    });
+                });
+                if (dbMessages.length) {
+                    setMessages(dbMessages)
+                }
+                else {
+                    setMessages(null)
+                }
+            })
+        }
+        socket.on('message', receiveMessage);
+        return () => {
+            socket.off('message', receiveMessage)
+        };
+    }, [messages])
   useEffect(() => {
     myRef.current.scrollTop = myRef.current.scrollHeight;
   }, [messages]);
