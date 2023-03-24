@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import pp from "../../assets/default.png";
+import axios from "axios";
 import { FaPlayCircle } from "react-icons/fa";
 import { MdAddComment } from "react-icons/md";
 import { AiFillLike } from "react-icons/ai";
@@ -7,11 +8,11 @@ import { AiOutlineLike } from "react-icons/ai";
 import { Image, Audio } from 'cloudinary-react';
 
 const Post = ({ post }) => {
-  const { content, id, Images, Comments, Likes, createdAt } = post;
-  // console.log(post)
+  const { content, id, Images, Comments, Likes, User, createdAt } = post;
 
+  
   const { VITE_CLOUD_NAME, VITE_POST_MEDIA_PRESET, VITE_PORT } = import.meta.env;
-
+  
   const format = createdAt.split("-")[2];
 
   const form = `${format[0].concat(format[1])}/${createdAt.split("-")[1]}`;
@@ -29,9 +30,8 @@ const Post = ({ post }) => {
   }
 
   return (
-    <>
       <div
-        className="bg-gradient-to-tl from-sixty-percent to-thirty-percent rounded-lg p-4 w-96"
+        className="bg-gradient-to-tl from-sixty-percent to-thirty-percent rounded-lg p-4 w-96 my-5"
         key={id}
       >
         <div>
@@ -41,7 +41,7 @@ const Post = ({ post }) => {
               className="w-6 mb-2 rounded-full bg-sixty-percent cursor-pointer"
             />
             <p className="text-white font-thin text-xs cursor-pointer hover:underline">
-              andres.jsx
+              {User && User.username || 'loading...'}
             </p>
             <p className="text-slate-600 text-xs">{form}</p>
           </div>
@@ -80,7 +80,6 @@ const Post = ({ post }) => {
           <></>
         )}
       </div>
-    </>
   );
 };
 

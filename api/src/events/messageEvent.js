@@ -2,7 +2,7 @@ const { Message, Chat, Image, Audio, Video, User } = require("../db");
 
 const handleMessageEvent = (io, socket) => {
     socket.on('message', async (messageData) => {
-        console.log(`Mensaje recibido en el evento message: ${messageData.content} chat_id: ${messageData.chat_id}`);
+        console.log(`Mensaje recibido en el evento message: ${messageData.content && messageData.content || messageData.audio && messageData.images && 'multimedia' || messageData.audio && 'audio'} chat_id: ${messageData.chat_id}`);
         io.to(messageData.chat_id).emit('message', {messageData, id: messageData.user_id});
         try {
             const { content, images, video, audio, user_id, chat_id } = messageData;

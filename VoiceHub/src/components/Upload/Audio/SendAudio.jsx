@@ -1,14 +1,13 @@
 import React, { useState, useRef } from "react";
 
 
-export default function Audio({ setAudio, handleChange }) {
+export default function SendAudio({ setAudio, audio }) {
     
     const { MediaRecorder } = window;
     const { VITE_CLOUD_NAME, VITE_POST_MEDIA_PRESET } = import.meta.env;
 
     const [recording, setRecording] = useState(false);
     const mediaRecorderRef = useRef(null);
-    const [audioFile, setAudioFile] = useState(null);
 
     const startRecording = (e) => {
         e.preventDefault();
@@ -25,7 +24,6 @@ export default function Audio({ setAudio, handleChange }) {
 
             mediaRecorder.onstop = () => {
             const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
-            setAudioFile(blob);
             setAudio(blob);
             };
 
@@ -47,18 +45,20 @@ export default function Audio({ setAudio, handleChange }) {
 
   return (
     <div>
-      <button className="text-teal-50" onClick={recording ? stopRecording : startRecording}>
+      { !audio &&
+        <button className="text-teal-50" onClick={recording ? stopRecording : startRecording}>
         {recording ? 'Stop Recording' : 'Start Recording'}
-      </button>
+      </button>}
+
       {
-          audioFile && <button onClick={() => {
-            setAudioFile(null)
+          audio &&
+          <button
+          className="p-2 bg-purple-800 text-white"
+          onClick={() => {
             setAudio(null)
         }}>Delete Audio</button>
+        
       }
-      {audioFile && (
-        <audio src={URL.createObjectURL(audioFile)} controls />
-      )}
     </div>
   );
 }

@@ -18,11 +18,12 @@ export default function Chats() {
           <h1 className="cursor-pointer border-solid border-thirty-percent border p-4 hover:bg-sixty-percent-home">Start new chat</h1>
         </div>
         {(userLogged[0] &&
-          userLogged[0].Chats.map((chat) => {
+          userLogged[0].Chats.map((chat, index) => {
             return (
               <div
                 className="cursor-pointer bg-sixty-percent-home p-5 flex justify-between hover:bg-thirty-percent duration-300"
                 onClick={() => navigate(`/chats/chat/${chat.id}`)}
+                key={index}
               >
                 <p className="text-white">{chat.name}</p>
                 <span className="text-ten-percent">Delete</span>

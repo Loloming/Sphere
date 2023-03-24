@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import Audio from "./Audio/Audio";
+import SendAudio from "./Audio/SendAudio";
 import { useSelector } from "react-redux";
 import { getUserLogged } from "../../redux/reducers/userReducer";
 
@@ -72,7 +72,10 @@ export default function Upload() {
         <form className="flex flex-col">
             <input type="text" name="content" value={content} onChange={(e) => setContent(e.target.value)}/>
             <input className="text-teal-50" type="file" name="file" onChange={(e) => setImages(e.target.files)}/>
-            <Audio setAudio={setAudio}/>
+            <SendAudio setAudio={setAudio} audio={audio}/>
+            {audio && (
+                <audio src={URL.createObjectURL(audio)} controls />
+            )}
             <button className="text-teal-50" onClick={handleUpload}>Submit</button>
         </form>
     )
