@@ -4,8 +4,8 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const routes= require('./routes/index.js');
 const cors = require('cors');
-const socket = require("./socket")
-const http = require('http')
+const socket = require("./socket");
+const http = require('http');
 require('dotenv').config();
 
 require('./db.js');
