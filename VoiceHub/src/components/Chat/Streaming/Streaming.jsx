@@ -14,14 +14,14 @@ export default function Streaming({ chat, peers, incomingCall, setIncomingCall, 
   }));
   const otherPeerId =
     arrPeers[0] &&
-    arrPeers.filter((user) => user.key !== userLogged[0].username)[0].peerId;
+    arrPeers.filter((user) => user.key !== userLogged[0]?.username)[0];
 
-  console.log(otherPeerId)
+    console.log(otherPeerId)
 
   function startCall() {
     navigator.mediaDevices.getUserMedia({audio: true})
     .then((MediaStream) => {
-        peer.call(otherPeerId, MediaStream, {
+        peer.call(otherPeerId.peerId, MediaStream, {
           metadata: { username: userLogged[0].username },
         });
     })
@@ -43,12 +43,15 @@ export default function Streaming({ chat, peers, incomingCall, setIncomingCall, 
   }
 
   return (
-    <div
-      className="bg-ten-percent flex items-center justify-center h-14 w-15 p-0 m-0"
+    <>
+    <button
+      className={!otherPeerId ? 'bg-slate-700' : "bg-ten-percent flex items-center justify-center h-14 w-15 p-0 m-0"}
       onClick={incomingCall ? handleAnswer : () => startCall()}
+      disabled={!otherPeerId}
     >
-      <h3 className="text-teal-50 m-0">{incomingCall ? 'Join stream' : 'Start stream'}</h3>
+      {incomingCall ? 'Join stream' : 'Start stream'}
+    </button>
       {onCall && <h3 className="text-teal-50 m-0" onClick={handleEndCall}>End call</h3>}
-    </div>
+    </>
   );
 }
