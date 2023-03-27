@@ -1,4 +1,5 @@
 const { Server } = require('socket.io');
+const handlePeerConnection = require('./events/handlePeerConnection');
 const handleJoinChat = require('./events/joinChatEvent');
 const handleMessageEvent = require('./events/messageEvent');
 const handleChatCreation = require('./events/newChatEvent');
@@ -19,6 +20,7 @@ const socket = (server) => {
     handleMessageEvent(io, socket);
     handleChatCreation(io, socket);
     handleJoinChat(io, socket);
+    handlePeerConnection(io, socket);
   });
 };
 
