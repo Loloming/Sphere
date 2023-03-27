@@ -24,6 +24,8 @@ export default function Chat() {
   const [peers, setPeers] = useState(null);
 
   const [chat, setChat] = useState({});
+  const [incomingCall, setIncomingCall] = useState(null);
+  const [mediaStream, setMediaStream] = useState(null);
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -37,19 +39,45 @@ export default function Chat() {
     });
 
     peer.on("call", (call) => {
-      console.log('te están llamando')
-      navigator.mediaDevices.getUserMedia({audio: true})
-      .then((mediaStream) => {
-        call.answer(mediaStream)
-      })
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((mediaStream) => {
+          // Agrega solo el audio entrante a un nuevo MediaStream
+          setIncomingCall(call)
+          const incomingAudioStream = new MediaStream();
+          call.on("stream", (remoteStream) => {
+            remoteStream.getAudioTracks().forEach((track) => {
+              incomingAudioStream.addTrack(track);
+            });
+          });
+
+          
+          // Reproduce el audio entrante en el altavoz
+          const audioElement = new Audio();
+          audioElement.srcObject = incomingAudioStream;
+          audioElement.play();
+          
+          setMediaStream(incomingAudioStream)
+          // Pide permisos para el micrófono y responde a la llamada
+
+          // Maneja el evento de cierre de la llamada
+          call.on("close", () => {
+            console.log('llamada cerrada');
+            setIncomingCall(null)
+            // Detiene la reproducción del audio entrante
+            // audioElement.pause()
+          });
+        })
+        .catch((error) => {
+          console.error("Error al obtener permisos del micrófono", error);
+        });
     });
-  }, [peer])
+  }, [peer]);
 
   useEffect(() => {
     socket.on("usersRoom", (users) => setPeers(users));
     return () => socket.off("usersRoom");
   }, [socket]);
-  
 
   useEffect(() => {
     if (
@@ -127,7 +155,16 @@ export default function Chat() {
       <div className="flex flex-col justify-center align-middle bg-sixty-percent h-screen p-10 gap-5">
         <div className="flex flex-row">
           <Info chat={chat} />
-          {peer && peers && <Streaming chat={chat} peer={peer} peers={peers} />}
+          {peer && peers && (
+            <Streaming
+              chat={chat}
+              peer={peer}
+              peers={peers}
+              incomingCall={incomingCall}
+              setIncomingCall={setIncomingCall}
+              mediaStream={mediaStream}
+            />
+          )}
         </div>
         <Messages messages={messages} chat={chat} myRef={myRef} />
         <SendMessage

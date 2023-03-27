@@ -4,8 +4,8 @@ import { peerInstance } from "../peer";
 import { getUserLogged } from "../../../redux/reducers/userReducer";
 import socket from "../socket";
 
-export default function Streaming({ chat, peers }) {
-  const [remoteStream, setRemoteStream] = useState(null);
+export default function Streaming({ chat, peers, incomingCall, setIncomingCall, mediaStream }) {
+  const [onCall, setOnCall] = useState(false);
   const [peer, setPeer] = useState(peerInstance);
   const userLogged = useSelector(getUserLogged);
   const arrPeers = Object.entries(peers).map(([key, value]) => ({
@@ -25,13 +25,28 @@ export default function Streaming({ chat, peers }) {
     })
   }
 
+  function handleAnswer() {
+    if (incomingCall && !onCall) {
+        incomingCall.answer();
+        setOnCall(true);
+      }
+  }
+
+  function handleEndCall() {
+    if (onCall) {
+        incomingCall.close();
+        setIncomingCall(false);
+        setOnCall(false);
+      }
+  }
+
   return (
     <div
       className="bg-ten-percent flex items-center justify-center h-14 w-15 p-0 m-0"
-      onClick={() => startCall()}
+      onClick={incomingCall ? handleAnswer : () => startCall()}
     >
-      <h3 className="text-teal-50 m-0">Join stream</h3>
-      {remoteStream && <video srcObject={remoteStream} autoPlay muted></video>}
+      <h3 className="text-teal-50 m-0">{incomingCall ? 'Join stream' : 'Start stream'}</h3>
+      {onCall && <h3 className="text-teal-50 m-0" onClick={handleEndCall}>End call</h3>}
     </div>
   );
 }
