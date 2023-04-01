@@ -29,22 +29,13 @@ export default function Streaming({ chat, peers }) {
 
     socket.on("onLeaveCall", (usersInCall) => {
       if (Object.entries(usersInCall).length < 2) {
-        setTimeout(() => {
-          console.log(endCallButtonRef);
-          if (endCallButtonRef.current) {
-            endCallButtonRef.current.click();
-            console.log("finalizando llamada...");
-          }
-        }, 500);
+        if (endCallButtonRef.current) {
+          endCallButtonRef.current.click();
+          console.log("finalizando llamada...");
+        }
       }
     });
   }, []);
-
-  useEffect(() => {
-    if (!incomingCall && !outgoingCall && !localStream) {
-      setOnCall(false);
-    }
-  }, [incomingCall, outgoingCall, localStream]);
 
   function startCall() {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -103,27 +94,25 @@ export default function Streaming({ chat, peers }) {
 
   function handleEndCall() {
     console.log("endcall");
-    setTimeout(() => {
-      if (incomingCall && localStream) {
-        localStream.getTracks().forEach((track) => {
-          track.stop();
-        });
-        incomingCall.close();
-        socket.emit("call-leaved", {
-          roomId: chat.id,
-          peerId: peerInstance.id,
-          user: userLogged[0].username,
-        });
-      }
-      if (outgoingCall) {
-        outgoingCall.close();
-        socket.emit("call-leaved", {
-          roomId: chat.id,
-          peerId: peerInstance.id,
-          user: userLogged[0].username,
-        });
-      }
-    }, 1000);
+    if (incomingCall && localStream) {
+      localStream.getTracks().forEach((track) => {
+        track.stop();
+      });
+      incomingCall.close();
+      socket.emit("call-leaved", {
+        roomId: chat.id,
+        peerId: peerInstance.id,
+        user: userLogged[0].username,
+      });
+    }
+    if (outgoingCall) {
+      outgoingCall.close();
+      socket.emit("call-leaved", {
+        roomId: chat.id,
+        peerId: peerInstance.id,
+        user: userLogged[0].username,
+      });
+    }
   }
 
   const EndCall = forwardRef((props, ref) => {
@@ -149,9 +138,7 @@ export default function Streaming({ chat, peers }) {
           (outgoingCall && "Streaming") ||
           "Start stream"}
       </button>
-      {(onCall && outgoingCall && (
-        <EndCall ref={endCallButtonRef}/>
-      )) ||
+      {(onCall && outgoingCall && <EndCall ref={endCallButtonRef} />) ||
         (onCall && incomingCall && (
           <button
             className="text-teal-50 m-0"
