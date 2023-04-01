@@ -24,8 +24,6 @@ export default function Chat() {
   const [peers, setPeers] = useState(null);
 
   const [chat, setChat] = useState({});
-  const [incomingCall, setIncomingCall] = useState(null);
-  const [mediaStream, setMediaStream] = useState(null);
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -34,50 +32,12 @@ export default function Chat() {
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    peer.on("open", (id) => {
-      // setPeerId(id)
+    socket.on("usersRoom", (users) =>{
+      setPeers(users)
+      console.log(peers)
     });
-
-    peer.on("call", (call) => {
-      navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then((mediaStream) => {
-          // Agrega solo el audio entrante a un nuevo MediaStream
-          setIncomingCall(call)
-          const incomingAudioStream = new MediaStream();
-          call.on("stream", (remoteStream) => {
-            remoteStream.getAudioTracks().forEach((track) => {
-              incomingAudioStream.addTrack(track);
-            });
-          });
-
-          
-          // Reproduce el audio entrante en el altavoz
-          const audioElement = new Audio();
-          audioElement.srcObject = incomingAudioStream;
-          audioElement.play();
-          
-          setMediaStream(incomingAudioStream)
-          // Pide permisos para el micrófono y responde a la llamada
-
-          // Maneja el evento de cierre de la llamada
-          call.on("close", () => {
-            console.log('llamada cerrada');
-            setIncomingCall(null)
-            // Detiene la reproducción del audio entrante
-            // audioElement.pause()
-          });
-        })
-        .catch((error) => {
-          console.error("Error al obtener permisos del micrófono", error);
-        });
-    });
-  }, [peer]);
-
-  useEffect(() => {
-    socket.on("usersRoom", (users) => setPeers(users));
     return () => socket.off("usersRoom");
-  }, [socket]);
+  }, []);
 
   useEffect(() => {
     if (
@@ -125,17 +85,20 @@ export default function Chat() {
               content: m.content,
               audio: m.audio || (m.Audio && m.Audio.url) || null,
               images: m.images || m.Images,
+              id: m.id
             });
           });
-          if (dbMessages.length) {
-            setMessages(dbMessages);
+          if (dbMessages.length) {  
+            console.log('sin sort', dbMessages)          
+            console.log('con sort', dbMessages.sort((a, b) => a.id - b.id))          
+            setMessages(dbMessages.sort((a, b) => a.id - b.id));
           } else {
             setMessages(null);
           }
         });
     }
     userLogged[0] &&
-      peer &&
+      peerInstance &&
       socket.emit("joinChat", {
         roomId: chatId * 1,
         peerId: peer.id,
@@ -158,11 +121,7 @@ export default function Chat() {
           {peer && peers && (
             <Streaming
               chat={chat}
-              peer={peer}
               peers={peers}
-              incomingCall={incomingCall}
-              setIncomingCall={setIncomingCall}
-              mediaStream={mediaStream}
             />
           )}
         </div>
