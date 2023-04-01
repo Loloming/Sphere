@@ -75,9 +75,12 @@ export default function Chat() {
   // }, [peer, incomingCall]);
 
   useEffect(() => {
-    socket.on("usersRoom", (users) => setPeers(users));
+    socket.on("usersRoom", (users) =>{
+      setPeers(users)
+      console.log(peers)
+    });
     return () => socket.off("usersRoom");
-  }, [socket]);
+  }, []);
 
   useEffect(() => {
     if (

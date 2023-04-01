@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { peerInstance } from "../peer";
 import { getUserLogged } from "../../../redux/reducers/userReducer";
 import socket from "../socket";
-import Peer from "peerjs";
 
-export default function Streaming({ peers }) {
+export default function Streaming({ chat, peers }) {
   const [onCall, setOnCall] = useState(false);
   const [outgoingCall, setOutgoingCall] = useState(null);
   const [incomingCall, setIncomingCall] = useState(null);
-  const [mediaStream, setMediaStream] = useState();
-  const [peer, setPeer] = useState(peerInstance);
+  const [localStream, setLocalStream] = useState(null);
+
+  const audioRef = useRef(null); // Se puede usar para mutear el audio del otro usuario posteriormente (audioRef.current.pause())
+  const endCallButtonRef = useRef(null);
+
   const userLogged = useSelector(getUserLogged);
   const arrPeers = Object.entries(peers).map(([key, value]) => ({
     key,
@@ -21,101 +23,116 @@ export default function Streaming({ peers }) {
     arrPeers.filter((user) => user.key !== userLogged[0]?.username)[0];
 
   useEffect(() => {
-    let stream = null; // Guarda una referencia al objeto MediaStream
-
-    peerInstance.on("connection", (conn) => {
-      conn.on("data", (data) => {
-        if (data.type === "call-ended") {
-          // Maneja el evento de cierre de la llamada
-          console.log("Llamada cerrada");
-          setIncomingCall(null);
-          setOnCall(false);
-
-          // Detiene el stream y deja de usar el micrófono
-          console.log(mediaStream, stream);
-          if (stream || mediaStream) {
-            stream ? stream.getTracks().forEach((track) => {
-              track.stop();
-            }) : mediaStream.getTracks().forEach((track) => {
-              track.stop();
-            });
-          }
-        }
-      });
+    peerInstance.on("call", (call) => {
+      setIncomingCall(call);
     });
 
-    peerInstance.on("call", (call) => {
-      console.log("llamadosky");
-      setIncomingCall(call);
-      navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then((mediaStr) => {
-          // Guarda una referencia al objeto MediaStream
-          stream = mediaStr;
-
-          // Agrega solo el audio entrante a un nuevo MediaStream
-          const incomingAudioStream = new MediaStream();
-          call.on("stream", (remoteStream) => {
-            remoteStream.getAudioTracks().forEach((track) => {
-              incomingAudioStream.addTrack(track);
-            });
-          });
-          call.on("close", () => {
-            stream.getTracks().forEach((track) => {
-              track.stop();
-            });
-          });
-          // Reproduce el audio entrante en el altavoz
-          const audioElement = new Audio();
-          audioElement.srcObject = incomingAudioStream;
-          audioElement.play();
-        })
-        .catch((error) => {
-          console.error("Error al obtener permisos del micrófono", error);
-        });
+    socket.on("onLeaveCall", (usersInCall) => {
+      if (Object.entries(usersInCall).length < 2) {
+        setTimeout(() => {
+          console.log(endCallButtonRef);
+          if (endCallButtonRef.current) {
+            endCallButtonRef.current.click();
+            console.log("finalizando llamada...");
+          }
+        }, 500);
+      }
     });
   }, []);
 
+  useEffect(() => {
+    if (!incomingCall && !outgoingCall && !localStream) {
+      setOnCall(false);
+    }
+  }, [incomingCall, outgoingCall, localStream]);
+
   function startCall() {
-    setOnCall(true);
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((MediaStream) => {
-      setMediaStream(MediaStream);
-      var call = peer.call(otherPeerId.peerId, MediaStream, {
-        metadata: { username: userLogged[0].username },
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      setLocalStream(stream);
+      const call = peerInstance.call(otherPeerId.peerId, stream, {
+        audio: true,
       });
       setOutgoingCall(call);
+      setOnCall(true);
+
+      socket.emit("call-started", {
+        roomId: chat.id,
+        peerId: peerInstance.id,
+        user: userLogged[0].username,
+      });
+
+      call.on("stream", (incomingStream) => {
+        const audioElement = new Audio();
+        audioElement.srcObject = incomingStream;
+        audioElement.play();
+        audioRef.current = audioElement;
+      });
+      call.on("data", (data) => {
+        if (data === "call-ended") {
+          console.log("universal!");
+          call.close();
+        }
+      });
       call.on("close", () => {
-        console.log("Llamada cerrada desde el lado del emisor");
-        setOnCall(false);
+        stream?.getTracks().forEach((track) => {
+          console.log("stream stopped");
+          track.stop();
+        });
+        console.log("llamada finalizada");
         setOutgoingCall(null);
       });
     });
   }
 
   function handleAnswer() {
-    if (incomingCall && !onCall) {
-      incomingCall.answer();
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      setLocalStream(stream);
+      incomingCall.answer(stream);
       setOnCall(true);
-    }
+      incomingCall.on("stream", (incomingStream) => {
+        const audioElement = new Audio();
+        audioElement.srcObject = incomingStream;
+        audioElement.pause();
+        audioRef.current = audioElement;
+      });
+      incomingCall.on("close", () => {
+        setIncomingCall(null);
+      });
+    });
   }
 
   function handleEndCall() {
-    if ((onCall && outgoingCall) || (onCall && incomingCall)) {
-      if (mediaStream) {
-        mediaStream.getTracks().forEach((track) => {
+    console.log("endcall");
+    setTimeout(() => {
+      if (incomingCall && localStream) {
+        localStream.getTracks().forEach((track) => {
           track.stop();
         });
+        incomingCall.close();
+        socket.emit("call-leaved", {
+          roomId: chat.id,
+          peerId: peerInstance.id,
+          user: userLogged[0].username,
+        });
       }
-      outgoingCall ? outgoingCall.close() : incomingCall.close();
-      setOutgoingCall(false);
-      setIncomingCall(false);
-      setOnCall(false);
-      const conn = peerInstance.connect(otherPeerId.peerId);
-      conn.on("open", () => {
-        conn.send({ type: "call-ended" });
-      });
-    }
+      if (outgoingCall) {
+        outgoingCall.close();
+        socket.emit("call-leaved", {
+          roomId: chat.id,
+          peerId: peerInstance.id,
+          user: userLogged[0].username,
+        });
+      }
+    }, 1000);
   }
+
+  const EndCall = forwardRef((props, ref) => {
+    return (
+      <button className="text-teal-50 m-0" ref={ref} onClick={handleEndCall}>
+        End call
+      </button>
+    );
+  });
 
   return (
     <>
@@ -133,15 +150,22 @@ export default function Streaming({ peers }) {
           "Start stream"}
       </button>
       {(onCall && outgoingCall && (
-        <button className="text-teal-50 m-0" onClick={handleEndCall}>
-          End call
-        </button>
+        <EndCall ref={endCallButtonRef}/>
       )) ||
         (onCall && incomingCall && (
-          <button className="text-teal-50 m-0" onClick={handleEndCall}>
+          <button
+            className="text-teal-50 m-0"
+            ref={endCallButtonRef}
+            onClick={handleEndCall}
+          >
             End call
           </button>
         ))}
+      <button
+        onClick={() => console.log(incomingCall, outgoingCall, localStream)}
+      >
+        Status
+      </button>
     </>
   );
 }

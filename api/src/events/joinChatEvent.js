@@ -6,7 +6,7 @@ const handleJoinChat = (io, socket) => {
   socket.on("joinChat", ({ roomId, peerId, user }) => {
     console.log(`El socket ${socket.id} se ha unido a la habitación ${roomId}`);
     if (peerId) {
-      users[user] = {roomId, peerId}
+      users[user] = {roomId, peerId, socketId: socket.id}
     }
     socket.emit("usersRoom", users);
     socket.to(roomId).emit("usersRoom", users);
@@ -15,4 +15,4 @@ const handleJoinChat = (io, socket) => {
   });
 };
 
-module.exports = handleJoinChat;
+module.exports = {handleJoinChat, users};
