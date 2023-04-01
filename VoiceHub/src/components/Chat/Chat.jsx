@@ -88,9 +88,7 @@ export default function Chat() {
               id: m.id
             });
           });
-          if (dbMessages.length) {  
-            console.log('sin sort', dbMessages)          
-            console.log('con sort', dbMessages.sort((a, b) => a.id - b.id))          
+          if (dbMessages.length) {       
             setMessages(dbMessages.sort((a, b) => a.id - b.id));
           } else {
             setMessages(null);
