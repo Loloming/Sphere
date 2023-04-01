@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { peerInstance } from "../peer";
 import { getUserLogged } from "../../../redux/reducers/userReducer";
-import socket from "../socket";
 
 export default function Streaming({ chat, peers, incomingCall, setIncomingCall, mediaStream }) {
   const [onCall, setOnCall] = useState(false);
