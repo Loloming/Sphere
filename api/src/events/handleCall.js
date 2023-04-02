@@ -7,8 +7,10 @@ const handleCall = (io, socket) => {
       peerId: user.peerId,
       socketId: socket.id,
     };
-    socket.to(user.roomId).emit("call-status", usersInCall);
+    socket.emit("call-status", usersInCall);
+    socket.emit('get-status', usersInCall)
   });
+  //socket.on('get-status', () => {socket.emit('get-status', usersInCall)})
   socket.on("call-leaved", (user) => {
     for (let key in usersInCall) {
       if (usersInCall[key].socketId === socket.id) {
@@ -19,6 +21,7 @@ const handleCall = (io, socket) => {
     }
     console.log(`El usuario ${user.user} abandonó la llamada`);
     socket.to(user.roomId).emit("onLeaveCall", usersInCall);
+    socket.emit('get-status', usersInCall)
   });
 };
 
