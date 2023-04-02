@@ -16,11 +16,14 @@ export default function Home() {
     return (
         <div className="flex flex-col h-full justify-start bg-gradient-to-b from-sixty-percent-home to-sixty-percent min-h-screen">
             <Header />
-            <div className="grid grid-flow-col grid-cols-3 col-span-3 h-full w-full">
+            <div className="grid grid-cols-posts h-full w-full">
                 <div>
                     preview
                 </div>
                 <Posts />
+                <div>
+                    preview
+                </div>
             </div>
         </div>
     )

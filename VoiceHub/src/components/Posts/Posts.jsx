@@ -11,7 +11,7 @@ const Posts = () => {
   // console.log(posts)
 
   return (
-    <div className='flex flex-col w-full my-3 items-center'>
+    <div className='flex flex-col w-full items-center'>
       <Upload />
       {posts?.map((post, id) => {
         return (

@@ -1,5 +1,6 @@
+let usersInCall = {};
+
 const handleCall = (io, socket) => {
-  let usersInCall = {};
   socket.on("call-started", (user) => {
     console.log("Llamada empezada por", user.user);
     usersInCall[user.user] = {
@@ -10,8 +11,7 @@ const handleCall = (io, socket) => {
     socket.emit("call-status", usersInCall);
     socket.emit('get-status', usersInCall)
   });
-  //socket.on('get-status', () => {socket.emit('get-status', usersInCall)})
-  socket.on("call-leaved", (user) => {
+  socket.on("call-left", (user) => {
     for (let key in usersInCall) {
       if (usersInCall[key].socketId === socket.id) {
         room = usersInCall[key].roomId;

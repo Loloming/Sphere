@@ -33,15 +33,19 @@ export default function Streaming({ chat, peers }) {
     });
 
     socket.on("onLeaveCall", (usersInCall) => {
+      console.log('un usuario dejó la llamada')
       if (Object.entries(usersInCall).length < 2) {
         if (endCallButtonRef.current) {
           endCallButtonRef.current.click();
           console.log("finalizando llamada...");
         }
+        else {
+          setIncomingCall(null);
+          setOverlay(false);
+        }
       }
     });
-
-    socket.on('get-status', (usersInCall) => {setCallStatus(usersInCall)})
+    socket.on('get-status', (usersInCall) => setCallStatus(usersInCall))
   }, []);
 
   function startCall() {
@@ -110,7 +114,7 @@ export default function Streaming({ chat, peers }) {
         track.stop();
       });
       incomingCall.close();
-      socket.emit("call-leaved", {
+      socket.emit("call-left", {
         roomId: chat.id,
         peerId: peerInstance.id,
         user: userLogged[0].username,
@@ -123,7 +127,7 @@ export default function Streaming({ chat, peers }) {
       });
       outgoingCall.close();
       setOnCall(false)
-      socket.emit("call-leaved", {
+      socket.emit("call-left", {
         roomId: chat.id,
         peerId: peerInstance.id,
         user: userLogged[0].username,
@@ -133,7 +137,7 @@ export default function Streaming({ chat, peers }) {
     else if (outgoingCall) {
       console.log('ongoingcall')
       outgoingCall.close();
-      socket.emit("call-leaved", {
+      socket.emit("call-left", {
         roomId: chat.id,
         peerId: peerInstance.id,
         user: userLogged[0].username,
