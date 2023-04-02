@@ -6,8 +6,6 @@ import { getUserLogged } from "../../redux/reducers/userReducer";
 export default function Chats() {
   const userLogged = useSelector(getUserLogged);
 
-  console.log(userLogged);
-
   const navigate = useNavigate();
 
   return (

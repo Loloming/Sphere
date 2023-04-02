@@ -34,7 +34,6 @@ export default function Chat() {
   useEffect(() => {
     socket.on("usersRoom", (users) =>{
       setPeers(users)
-      console.log(peers)
     });
     return () => socket.off("usersRoom");
   }, []);
@@ -114,7 +113,7 @@ export default function Chat() {
   ) {
     return (
       <div className="flex flex-col justify-center align-middle bg-sixty-percent h-screen p-10 gap-5">
-        <div className="flex flex-row">
+        <div className="flex flex-row justify-between">
           <Info chat={chat} />
           {peer && peers && (
             <Streaming

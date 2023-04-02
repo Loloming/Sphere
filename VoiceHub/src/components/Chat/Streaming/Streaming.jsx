@@ -2,13 +2,16 @@ import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { peerInstance } from "../peer";
 import { getUserLogged } from "../../../redux/reducers/userReducer";
-import socket from '../socket'
+import socket from '../socket';
+import { VscCallOutgoing, VscCallIncoming } from 'react-icons/vsc';
+import { HiOutlinePhoneMissedCall } from 'react-icons/hi'
 
 export default function Streaming({ chat, peers }) {
   const [onCall, setOnCall] = useState(false);
   const [outgoingCall, setOutgoingCall] = useState(null);
   const [incomingCall, setIncomingCall] = useState(null);
   const [localStream, setLocalStream] = useState(null);
+  const [overlay, setOverlay] = useState(false);
 
   const audioRef = useRef(null); // Se puede usar para mutear el audio del otro usuario posteriormente (audioRef.current.pause())
   const endCallButtonRef = useRef(null);
@@ -25,6 +28,7 @@ export default function Streaming({ chat, peers }) {
   useEffect(() => {
     peerInstance.on("call", (call) => {
       setIncomingCall(call);
+      setOverlay(true)
     });
 
     socket.on("onLeaveCall", (usersInCall) => {
@@ -85,6 +89,7 @@ export default function Streaming({ chat, peers }) {
         audioElement.srcObject = incomingStream;
         audioElement.pause();
         audioRef.current = audioElement;
+        setOverlay(false)
       });
       incomingCall.on("close", () => {
         setIncomingCall(null);
@@ -117,42 +122,57 @@ export default function Streaming({ chat, peers }) {
 
   const EndCall = forwardRef((props, ref) => {
     return (
-      <button className="text-teal-50 m-0" ref={ref} onClick={handleEndCall}>
-        End call
+      <button className="text-teal-50 m-0 bg-red-900 h-12 w-12 aspect-square flex items-center justify-center rounded-xl" ref={ref} onClick={handleEndCall}>
+        <HiOutlinePhoneMissedCall size={30}/>
       </button>
     );
   });
 
+  const CallModal = () => {
+    
+    return (
+      <>
+        {incomingCall && (
+          <>
+          { overlay && <div className="absolute inset-0 flex justify-center items-center gap-4">
+              <h1 className="text-white relative z-20">You're getting a call</h1>
+              <button onClick={handleAnswer} className="relative z-20 bg-ten-percent flex items-center justify-center h-12 w-12 m-0 rounded-xl p-2"><VscCallIncoming size={25} /></button>
+            <div className="absolute inset-0 bg-slate-900 opacity-50 z-10">
+            </div>
+          </div>}
+          </>
+        )}
+      </>
+    );
+  };
+  
   return (
     <>
-      <button
+      { !incomingCall && !outgoingCall && (
+        <button
         className={
           !otherPeerId
-            ? "bg-slate-700"
-            : "bg-ten-percent flex items-center justify-center h-14 w-15 p-0 m-0"
+            ? "bg-slate-700 rounded-xl h-12 w-12 aspect-square flex items-center justify-center"
+            : "bg-ten-percent flex items-center justify-center h-12 w-12 p-0 m-0 rounded-xl aspect-square"
         }
         onClick={incomingCall ? handleAnswer : () => startCall()}
         disabled={!otherPeerId}
       >
-        {(incomingCall && "Join stream") ||
-          (outgoingCall && "Streaming") ||
-          "Start stream"}
-      </button>
+          <VscCallOutgoing size={30}/>     
+      </button> )}
+      {incomingCall && (<span className="animate-ping absolute inline-flex h-2 w-2 top-64 left-48 rounded-full bg-ten-percent opacity-75"></span>)}
+      {outgoingCall && (<span className="animate-ping absolute inline-flex h-2 w-2 top-64 left-48 rounded-full bg-ten-percent opacity-75"></span>)}
+      {incomingCall && <CallModal />}
       {(onCall && outgoingCall && <EndCall ref={endCallButtonRef} />) ||
         (onCall && incomingCall && (
           <button
-            className="text-teal-50 m-0"
+            className="text-teal-50 m-0 bg-red-900 h-12 w-12 aspect-square flex items-center justify-center rounded-xl"
             ref={endCallButtonRef}
             onClick={handleEndCall}
           >
-            End call
+            <HiOutlinePhoneMissedCall size={30}/>
           </button>
         ))}
-      <button
-        onClick={() => console.log(incomingCall, outgoingCall, localStream)}
-      >
-        Status
-      </button>
-    </>
+     </>
   );
 }
