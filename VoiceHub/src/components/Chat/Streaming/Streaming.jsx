@@ -126,6 +126,8 @@ export default function Streaming({ chat, peers }) {
         track.stop();
       });
       outgoingCall.close();
+      setIncomingCall(null)
+      setOutgoingCall(null)
       setOnCall(false)
       socket.emit("call-left", {
         roomId: chat.id,
