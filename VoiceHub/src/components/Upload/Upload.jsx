@@ -69,8 +69,8 @@ export default function Upload() {
       
 
     return (
-        <form className="flex flex-col bg-zinc-800 w-full">
-            <input type="text" className="h-16 focus:outline-none" name="content" value={content} onChange={(e) => setContent(e.target.value)}/>
+        <form className="flex flex-col items-center bg-gradient-to-b from-sixty-percent to-sixty-percent-home shadow-2xl rounded-lg p-4 w-full my-5">
+            <input type="text" className="rounded-lg w-5/6 text-center bg-slate-300 focus:outline-none h-16 animate-expand" name="content" value={content} onChange={(e) => setContent(e.target.value)}/>
             <input className="text-teal-50" type="file" name="file" onChange={(e) => setImages(e.target.files)}/>
             <SendAudio setAudio={setAudio} audio={audio}/>
             {audio && (

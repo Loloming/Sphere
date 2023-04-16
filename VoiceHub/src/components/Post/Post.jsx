@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import pp from "../../assets/default.png";
-import axios from "axios";
-import { FaPlayCircle } from "react-icons/fa";
 import { MdAddComment } from "react-icons/md";
 import { AiFillLike } from "react-icons/ai";
 import { AiOutlineLike } from "react-icons/ai";
-import { Image, Audio } from 'cloudinary-react';
+import { Image } from "cloudinary-react";
+import Comments from "./Comments/Comments";
+import Audio from "../Audio/Audio";
 
 const Post = ({ post }) => {
-  const { content, id, Images, Comments, Likes, User, createdAt } = post;
+  const { content, id, Images, Likes, User, createdAt } = post;
 
-  
-  const { VITE_CLOUD_NAME, VITE_POST_MEDIA_PRESET, VITE_PORT } = import.meta.env;
-  
+  const { VITE_CLOUD_NAME } = import.meta.env;
+
   const format = createdAt.split("-")[2];
 
   const form = `${format[0].concat(format[1])}/${createdAt.split("-")[1]}`;
@@ -29,29 +28,35 @@ const Post = ({ post }) => {
     setComment(!comment);
   }
 
-  return (
+  if (Images[0]) {
+    return (
       <div
-        className="bg-gradient-to-tl from-sixty-percent to-thirty-percent rounded-lg p-4 w-96 my-5"
+        className="flex flex-row bg-gradient-to-tl from-sixty-percent to-thirty-percent rounded-lg p-4 w-full h-96 my-3"
         key={id}
       >
-        <div>
-          <div className="flex flex-row gap-2 justify-between">
+        {Images[0] && (
+          <Image
+            cloudName={VITE_CLOUD_NAME}
+            publicId={Images[0].url}
+            alt="noimg"
+            width={"50%"}
+            className="rounded-lg"
+          ></Image>
+        )}
+        <div className="w-1/2 flex flex-col">
+          <div className="flex flex-row justify-around w-full">
             <img
               src={pp}
               className="w-6 mb-2 rounded-full bg-sixty-percent cursor-pointer"
             />
             <p className="text-white font-thin text-xs cursor-pointer hover:underline">
-              {User && User.username || 'loading...'}
+              {(User && User.username) || "loading..."}
             </p>
             <p className="text-slate-600 text-xs">{form}</p>
           </div>
-          {Images[0] && <Image cloudName={VITE_CLOUD_NAME} publicId={Images[0].url} alt="noimg" className="rounded-lg" />}
-          {post.Audio && <Audio cloudName={VITE_CLOUD_NAME} publicId={post.Audio.url} controls/>}
-          <div className="mt-4 rounded-md p-2 flex justify-between">
-            <p className="text-slate-400 text-sm w-5/6">{content}</p>
-            <button>
-              <FaPlayCircle className="text-ten-percent" size={20} />
-            </button>
+          {post.Audio && <Audio public_id={post.Audio.url} />}
+          <div className="mt-4 rounded-md p-2 flex justify-center">
+            <p className="text-slate-400 text-sm w-full text-center">{content}</p>
           </div>
           <div className="flex mt-4 gap-7 justify-center">
             <button onClick={() => commenter()}>
@@ -59,7 +64,10 @@ const Post = ({ post }) => {
             </button>
             {like ? (
               <button onClick={() => liker()}>
-                <AiFillLike className="text-ten-percent animate-like" size={25} />
+                <AiFillLike
+                  className="text-ten-percent animate-like"
+                  size={25}
+                />
               </button>
             ) : (
               <button onClick={() => liker()}>
@@ -67,19 +75,57 @@ const Post = ({ post }) => {
               </button>
             )}
           </div>
+          {comment ? <Comments comments={post.Comments} post_id={id} /> : null}
         </div>
-        {comment ? (
-          <div className="w-full p-4 mt-4 flex gap-4 items-center">
-            <img
-              src={pp}
-              className="w-6 mb-2 rounded-full bg-sixty-percent cursor-pointer"
-            />
-            <input type="text" placeholder="Write a comment..." className="rounded-lg w-5/6 text-center bg-slate-300 focus:outline-none h-11 animate-expand" />
-          </div>
-        ) : (
-          <></>
-        )}
       </div>
+    );
+  }
+
+  return (
+    <div
+      className="flex flex-row justify-center bg-gradient-to-tl from-sixty-percent to-thirty-percent rounded-lg p-4 w-full h-96 my-3"
+      key={id}
+    >
+      <div>
+        <div className="flex flex-row gap-2 justify-between w-full">
+          <img
+            src={pp}
+            className="w-6 mb-2 rounded-full bg-sixty-percent cursor-pointer"
+          />
+          <p className="text-white font-thin text-xs cursor-pointer hover:underline">
+            {(User && User.username) || "loading..."}
+          </p>
+          <p className="text-slate-600 text-xs">{form}</p>
+        </div>
+        {Images[0] && (
+          <Image
+            cloudName={VITE_CLOUD_NAME}
+            publicId={Images[0].url}
+            alt="noimg"
+            className="rounded-lg"
+          />
+        )}
+        {post.Audio && <Audio public_id={post.Audio.url} />}
+        <div className="mt-4 rounded-md p-2 flex justify-between">
+          <p className="text-slate-400 text-sm w-5/6">{content}</p>
+        </div>
+        <div className="flex mt-4 gap-7 justify-center">
+          <button onClick={() => commenter()}>
+            <MdAddComment className="text-ten-percent" size={25} />
+          </button>
+          {like ? (
+            <button onClick={() => liker()}>
+              <AiFillLike className="text-ten-percent animate-like" size={25} />
+            </button>
+          ) : (
+            <button onClick={() => liker()}>
+              <AiOutlineLike className="text-ten-percent" size={25} />
+            </button>
+          )}
+        </div>
+      </div>
+      {comment ? <Comments comments={post.Comments} post_id={id} /> : null}
+    </div>
   );
 };
 

@@ -31,6 +31,9 @@ const getPost = async (req, res) => {
             },
             {
               model: Audio
+            },
+            {
+              model: User
             }
           ]
         },

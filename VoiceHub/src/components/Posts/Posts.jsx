@@ -12,7 +12,6 @@ const Posts = () => {
 
   return (
     <div className='flex flex-col w-full items-center'>
-      <Upload />
       {posts?.map((post, id) => {
         return (
           <Post key={id} post={post} />

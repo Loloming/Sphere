@@ -4,6 +4,7 @@ import "../../App.css";
 import { getPosts } from "../../redux/reducers/postReducer";
 import Header from "../Header/Header";
 import Posts from "../Posts/Posts";
+import Upload from "../Upload/Upload";
 
 export default function Home() {
 
@@ -16,13 +17,14 @@ export default function Home() {
     return (
         <div className="flex flex-col h-full justify-start bg-gradient-to-b from-sixty-percent-home to-sixty-percent min-h-screen">
             <Header />
+            <Upload />
             <div className="grid grid-cols-posts h-full w-full">
                 <div>
-                    preview
+                    
                 </div>
                 <Posts />
                 <div>
-                    preview
+                    
                 </div>
             </div>
         </div>
