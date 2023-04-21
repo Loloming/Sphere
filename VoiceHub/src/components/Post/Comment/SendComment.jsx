@@ -23,41 +23,37 @@ export default function SendComment({ post_id }) {
   function handleSubmit(e) {
     e.preventDefault();
     try {
-      axios.post(
-        `http://localhost:${VITE_PORT}/comments/createComment`,
-        comment
-      )
-      .then(response => {
-        if (response.data === "Succesfully posted!") {
-            setComment({user_id: userLogged[0].id, post_id, content: ""})
-        }
-      })
+      axios
+        .post(`http://localhost:${VITE_PORT}/comments/createComment`, comment)
+        .then((response) => {
+          if (response.data === "Succesfully posted!") {
+            setComment({ user_id: userLogged[0].id, post_id, content: "" });
+          }
+        });
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-row flex-nowrap items-center w-full"
+      className="flex flex-col flex-nowrap items-center justify-end w-full max-h-11"
     >
-      <img
-        src={pp}
-        className="w-6 mb-2 rounded-full bg-sixty-percent cursor-pointer m-0"
-      />
-      <input
-        type="text"
-        name="content"
-        value={comment.content}
-        onChange={handleChange}
-        placeholder="Write a comment..."
-        autoComplete={"false"}
-        className="rounded-lg w-5/6 text-center bg-slate-300 focus:outline-none h-11 animate-expand m-0"
-      />
-      <button>
-        <MdSend size={25} className="text-ten-percent m-0 cursor-pointer" />
-      </button>
+      <div className="w-full">
+        <input
+          type="text"
+          name="content"
+          value={comment.content}
+          onChange={handleChange}
+          placeholder="Write a comment..."
+          autoComplete={"false"}
+          className="w-full text-center bg-ten-percent bg-opacity-10 text-teal-50 focus:outline-none h-11 m-0"
+        />
+        <button className="m-0 h-0 w-0 relative">
+          <MdSend size={26} className="text-ten-percent relative right-8 top-1.5"/>
+        </button>
+      </div>
     </form>
   );
 }

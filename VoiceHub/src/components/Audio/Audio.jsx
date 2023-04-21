@@ -19,9 +19,9 @@ export default function Audio({ public_id }) {
         barWidth: 3,
         barHeight: 1,
         height: 100,
-        // responsive: true,
+        responsive: true,
         waveColor: "#a3f",
-        cursorColor: "#0000",
+        cursorColor: "#0000"
       });
       setWaveform(wavesurfer);
       wavesurfer.load(url);
@@ -29,12 +29,22 @@ export default function Audio({ public_id }) {
     }
   }, []);
 
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+  
+    const minutesString = String(minutes).padStart(2, '0');
+    const secondsString = String(remainingSeconds).padStart(2, '0');
+  
+    return `${minutesString}:${secondsString}`;
+  } // en caso de querer agregar tiempo a los audios se usa formatTime(waveForm.backend.getDuration())
+
   return (
-    <div className="w-full flex flex-row items-center h-10 bg-violet-900 rounded-xl p-1 mx-2">
+    <div className="w-56 flex flex-row items-center h-10 bg-violet-900 rounded-2xl py-4 mx-2 overflow-hidden">
       {playing ? (
         <FaStopCircle
           className="text-ten-percent m-0 cursor-pointer"
-          size={30}
+          size={36}
           onClick={() => {
             waveForm.pause();
             setPlaying(!playing);
@@ -43,7 +53,7 @@ export default function Audio({ public_id }) {
       ) : (
         <FaPlayCircle
           className="text-ten-percent m-0 cursor-pointer"
-          size={30}
+          size={36}
           onClick={() => {
             waveForm.play();
             setPlaying(!playing);
