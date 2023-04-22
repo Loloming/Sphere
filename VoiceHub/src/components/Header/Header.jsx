@@ -10,7 +10,7 @@ export default function Header() {
     const IMG = "http://www.clipartbest.com/cliparts/niB/Mx8/niBMx87xT.gif";
 
     return (
-        <header className="bg-sixty-percent-variant shadow-xl z-50 flex flex-row flex-nowrap h-16 justify-between items-center px-5 min-w-full">
+        <header className="bg-sixty-percent-variant shadow-xl z-20 flex flex-row flex-nowrap h-16 justify-between items-center px-5 min-w-full">
             <Logo />
             <SearchBar />
             <div className="flex flex-row items-center gap-2">

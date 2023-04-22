@@ -1,14 +1,14 @@
 import React, { useState, useRef } from "react";
+import { RiMic2Fill, RiDeleteBin6Fill } from 'react-icons/ri'
+import { BsFillStopCircleFill } from 'react-icons/bs'
 
-
-export default function Audio({ setAudio, handleChange }) {
+export default function SendAudio({ setAudio, audio }) {
     
     const { MediaRecorder } = window;
     const { VITE_CLOUD_NAME, VITE_POST_MEDIA_PRESET } = import.meta.env;
 
     const [recording, setRecording] = useState(false);
     const mediaRecorderRef = useRef(null);
-    const [audioFile, setAudioFile] = useState(null);
 
     const startRecording = (e) => {
         e.preventDefault();
@@ -25,7 +25,6 @@ export default function Audio({ setAudio, handleChange }) {
 
             mediaRecorder.onstop = () => {
             const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
-            setAudioFile(blob);
             setAudio(blob);
             };
 
@@ -47,18 +46,18 @@ export default function Audio({ setAudio, handleChange }) {
 
   return (
     <div>
-      <button className="text-teal-50" onClick={recording ? stopRecording : startRecording}>
-        {recording ? 'Stop Recording' : 'Start Recording'}
-      </button>
+      { !audio &&
+        <button className="text-teal-50" onClick={recording ? stopRecording : startRecording}>
+        {recording ? <BsFillStopCircleFill size={35} className="text-ten-percent"/> : <RiMic2Fill size={35} className="text-ten-percent"/>}
+      </button>}
+
       {
-          audioFile && <button onClick={() => {
-            setAudioFile(null)
+          audio &&
+          <button
+          onClick={() => {
             setAudio(null)
-        }}>Delete Audio</button>
+        }}><RiDeleteBin6Fill size={35} className="text-ten-percent"/></button>
       }
-      {audioFile && (
-        <audio src={URL.createObjectURL(audioFile)} controls />
-      )}
     </div>
   );
 }

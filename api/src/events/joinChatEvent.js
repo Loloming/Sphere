@@ -1,10 +1,18 @@
 const { Chat } = require("../db");
 
-const handleJoinChat = (io, socket) => {
-    socket.on('joinChat', (roomId) => {
-        console.log(`El socket ${socket.id} se ha unido a la habitación ${roomId}`);
-        socket.join(roomId);
-      });
-}
+const users = {};
 
-module.exports = handleJoinChat;
+const handleJoinChat = (io, socket) => {
+  socket.on("joinChat", ({ roomId, peerId, user }) => {
+    console.log(`El socket ${socket.id} se ha unido a la habitación ${roomId}`);
+    if (peerId) {
+      users[user] = {roomId, peerId, socketId: socket.id}
+    }
+    socket.emit("usersRoom", users);
+    socket.to(roomId).emit("usersRoom", users);
+    socket.join(roomId);
+    console.log(users);
+  });
+};
+
+module.exports = {handleJoinChat, users};
