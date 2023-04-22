@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "../../App.css";
-import { getPosts } from "../../redux/reducers/postReducer";
+import { getAllPosts, getPosts } from "../../redux/reducers/postReducer";
 import Header from "../Header/Header";
 import Posts from "../Posts/Posts";
 import Upload from "../Upload/Upload";
@@ -9,10 +9,11 @@ import Upload from "../Upload/Upload";
 export default function Home() {
 
     const dispatch = useDispatch()
+    const posts = useSelector(getAllPosts)
 
     useEffect(() => {
         dispatch(getPosts())
-    })
+    }, [])
 
     return (
         <div className="flex flex-col h-full justify-start bg-gradient-to-b from-sixty-percent-home to-sixty-percent min-h-screen">
@@ -22,7 +23,7 @@ export default function Home() {
                 <div>
                     
                 </div>
-                <Posts />
+                <Posts posts={posts}/>
                 <div>
                     
                 </div>

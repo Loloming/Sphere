@@ -1,13 +1,10 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { getAllPosts } from '../../redux/reducers/postReducer'
 import Post from '../Post/Post'
-import Upload from '../Upload/Upload'
 
 
-const Posts = () => {
+const Posts = ({posts, isGrid}) => {
 
-  const posts = useSelector(getAllPosts)
+  // const posts = useSelector(getAllPosts)
   // console.log(posts)
 
   return (

@@ -31,12 +31,11 @@ const { User, Post, Comment, Follow, Like, Image, Video, Audio, Chat, Message } 
 
 
 
-User.hasMany(Follow, { foreignKey: 'followerId'});
+User.hasMany(Follow, { foreignKey: 'followerId', as: 'following' });
+User.hasMany(Follow, { foreignKey: 'followingId', as: 'followers' });
 User.hasMany(Message);
+User.hasMany(Post);
 User.belongsToMany(Chat, { through: 'User_Chat' });
-
-Follow.belongsTo(User, { foreignKey: 'followingId', as: 'following'});
-Follow.belongsTo(User, { foreignKey: 'followerId', as: 'follower'});
 
 Post.belongsToMany(Like, { through: 'Post_Like', onDelete: 'cascade'});
 Post.belongsToMany(Image, { through: 'Post_Image', onDelete: 'cascade'});

@@ -10,7 +10,7 @@ export default function SendComment({ post_id }) {
   const userLogged = useSelector(getUserLogged);
 
   const [comment, setComment] = useState({
-    user_id: userLogged[0].id,
+    user_id: userLogged && userLogged[0] && userLogged[0].id || null,
     post_id,
     content: "",
   });
