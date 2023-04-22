@@ -9,6 +9,8 @@ import Upload from "../Upload/Upload";
 export default function Home() {
   const [modal, setModal] = useState(false);
   const [published, setPublished] = useState(false)
+
+  const posts = useSelector(getAllPosts);
   
   useEffect(() => {
     if(published) {
@@ -39,7 +41,7 @@ export default function Home() {
       </div>
       <div className="grid grid-cols-posts h-full w-full">
         <div></div>
-        <Posts />
+        <Posts posts={posts}/>
         <div></div>
       </div>
     </div>
