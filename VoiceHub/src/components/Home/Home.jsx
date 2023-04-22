@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "../../App.css";
-import { getPosts } from "../../redux/reducers/postReducer";
+import { getAllPosts, getPosts } from "../../redux/reducers/postReducer";
 import Header from "../Header/Header";
 import Posts from "../Posts/Posts";
 import Upload from "../Upload/Upload";
@@ -9,7 +9,7 @@ import Upload from "../Upload/Upload";
 export default function Home() {
   const [modal, setModal] = useState(false);
   const [published, setPublished] = useState(false)
-
+  
   useEffect(() => {
     if(published) {
         setTimeout(() => {

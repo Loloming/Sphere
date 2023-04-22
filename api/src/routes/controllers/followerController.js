@@ -8,7 +8,6 @@ const {
 
 const getFollower = async (req, res) => {
   try {
-    const { name } = req.query;
     const follower = await Follow.findAll({
     })
     res.status(200).json(follower);
@@ -89,8 +88,8 @@ const createFollower = async (req, res) => {
     const { follower_id, user_id,} = req.body;
 
     const follower = await postModels(Follow, {
-      followerId: user_id,
-      followingId: follower_id
+      followerId: follower_id,
+      followingId: user_id
     });
 
     if (follower) {

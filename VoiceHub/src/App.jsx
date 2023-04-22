@@ -12,7 +12,6 @@ import { getUserLogged, loginUser } from "./redux/reducers/userReducer";
 
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const cookieUser = Cookies.get("uT");
 
@@ -36,7 +35,7 @@ function App() {
       {cookieUser || (validation && userLogged[0]) ? null : (
         <Route path="/" element={<LandinPage />} />
       )}
-      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/:username" element={<Profile />} />
       <Route path="/home" element={<Home />} />
       <Route path="/chats/chat/:chatId" element={<Chat />} />
       <Route path="/chats" element={<Chats />} />
