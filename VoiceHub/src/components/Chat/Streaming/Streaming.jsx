@@ -109,7 +109,6 @@ export default function Streaming({ chat, peers }) {
   function handleEndCall() {
     console.log("endcall");
     if (incomingCall && localStream) {
-      console.log('incoming call and localstream')
       localStream.getTracks().forEach((track) => {
         track.stop();
       });
@@ -174,6 +173,12 @@ export default function Streaming({ chat, peers }) {
                   className="relative z-20 bg-ten-percent flex items-center justify-center h-12 w-12 m-0 rounded-xl p-2"
                 >
                   <VscCallIncoming size={25} />
+                </button>
+                <button 
+                  onClick={handleEndCall}
+                  className="relative z-20 bg-red-900 flex items-center justify-center h-12 w-12 m-0 rounded-xl p-2"  
+                >
+                  <HiOutlinePhoneMissedCall size={25}/>
                 </button>
                 <div className="absolute inset-0 bg-slate-900 opacity-50 z-10"></div>
               </div>

@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
-
+import { RiMic2Fill, RiDeleteBin6Fill } from 'react-icons/ri'
+import { BsFillStopCircleFill } from 'react-icons/bs'
 
 export default function SendAudio({ setAudio, audio }) {
     
@@ -47,17 +48,15 @@ export default function SendAudio({ setAudio, audio }) {
     <div>
       { !audio &&
         <button className="text-teal-50" onClick={recording ? stopRecording : startRecording}>
-        {recording ? 'Stop Recording' : 'Start Recording'}
+        {recording ? <BsFillStopCircleFill size={35} className="text-ten-percent"/> : <RiMic2Fill size={35} className="text-ten-percent"/>}
       </button>}
 
       {
           audio &&
           <button
-          className="p-2 bg-purple-800 text-white"
           onClick={() => {
             setAudio(null)
-        }}>Delete Audio</button>
-        
+        }}><RiDeleteBin6Fill size={35} className="text-ten-percent"/></button>
       }
     </div>
   );
