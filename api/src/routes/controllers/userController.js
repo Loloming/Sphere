@@ -73,6 +73,9 @@ const getUserByUsername = async (req, res) => {
               ]
             },
             {
+              model:User
+            },
+            {
               model: Like
             },
             {

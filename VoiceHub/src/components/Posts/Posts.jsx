@@ -1,17 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Post from '../Post/Post'
+import PostGrid from '../PostGrid/PostGrid'
 
 
 const Posts = ({posts, isGrid}) => {
 
-  // const posts = useSelector(getAllPosts)
-  // console.log(posts)
+  useEffect(() => {
+    console.log('posts cambió')
+  }, [posts])
 
   return (
-    <div className='flex flex-col w-full items-center'>
-      {posts?.map((post, id) => {
+    <div className={isGrid ? 'grid grid-cols-5 grid-rows-3 justify-center items-center h-full overflow-x-hidden overflow-y-auto' : 'flex flex-col w-full items-center'}>
+      {!isGrid && posts[0] ? posts?.map((post, id) => {
         return (
           <Post key={id} post={post} />
+        )
+      }) : posts?.map((post, id) => {
+        return (
+          <PostGrid key={id} post={post} />
         )
       })}
     </div>

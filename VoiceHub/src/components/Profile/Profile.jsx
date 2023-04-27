@@ -9,6 +9,7 @@ import { VscLoading } from "react-icons/vsc";
 export default function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState(null);
 
   const { VITE_PORT } = import.meta.env;
   const { username } = useParams();
@@ -20,6 +21,7 @@ export default function Profile() {
       );
       if (response.data && response.data.username) {
         setUser(response.data);
+        setPosts(response.data.Posts)
       } else {
         navigate("/home");
       }
@@ -29,12 +31,13 @@ export default function Profile() {
   }
 
   useEffect(() => {
-    if (!user && username) {
+    if (username) {
+      console.log('username cambió')
       getUser(username);
     } else if (!username) {
       navigate("/home");
     }
-  }, [user]);
+  }, [username]);
 
   const getLikes = (userSelected) => {
     var likes = 0;
@@ -98,9 +101,9 @@ export default function Profile() {
           </div>
           <div className="grid grid-cols-posts w-full h-full">
             <div className="bg-gradient-to-b from-sixty-percent to-sixty-percent-banner shadow-2xl h-full text-center z-50"></div>
-            <div className="bg-gradient-to-t from-sixty-percent-home to-sixty-percent flex flex-col h-fit text-center">
-              <Filters />
-              {user && user.Posts && <Posts posts={user.Posts} />}
+            <div className="bg-gradient-to-t from-sixty-percent-home to-sixty-percent flex flex-col text-center h-max">
+              <Filters setPosts={setPosts} posts={posts} />
+              {user && user.Posts && <Posts posts={posts} isGrid={true} />}
             </div>
             <div className="bg-gradient-to-b from-sixty-percent to-sixty-percent-banner shadow-2xl  h-full text-center z-50"></div>
           </div>
