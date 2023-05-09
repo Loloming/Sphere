@@ -5,9 +5,9 @@ import PostGrid from '../PostGrid/PostGrid'
 
 const Posts = ({posts, isGrid}) => {
 
-  useEffect(() => {
-    console.log('posts cambió')
-  }, [posts])
+  // useEffect(() => {
+  //   console.log('posts cambió en Posts')
+  // }, [posts])
 
   return (
     <div className={isGrid ? 'grid grid-cols-5 grid-rows-3 justify-center items-center h-full overflow-x-hidden overflow-y-auto' : 'flex flex-col w-full items-center'}>

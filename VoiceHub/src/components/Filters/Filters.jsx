@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { filterProfilePosts } from "../../redux/reducers/postReducer";
 
-export default function Filters({setPosts, posts}) {
-
-    const formRef = useRef(null);
+export default function Filters() {
+  const dispatch = useDispatch();
 
   const [filters, setFilters] = useState({
     date: false,
@@ -10,38 +11,21 @@ export default function Filters({setPosts, posts}) {
     comments: false,
   });
 
-//   useEffect(() => {
-//     if (filters.date === 'recent') {
-//         console.log(posts)
-//         setPosts(posts.sort((a, b) => a.id - b.id))
-//     }
-//     if (filters.date === 'older') {
-//         console.log(posts)
-//         setPosts(posts.sort((a, b) => a.id - b.id).reverse())
-//     }
-//   }, [filters])
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    console.log('submit')
-    if (filters.date === 'recent') {
-        console.log(posts)
-        setPosts(posts.sort((a, b) => a.id - b.id))
-    }
-    if (filters.date === 'older') {
-        console.log(posts)
-        setPosts(posts.sort((a, b) => a.id - b.id).reverse())
-    }
-  }
-
   function handleChange(e) {
-      setFilters({ ...filters, [e.target.selectedOptions[0].dataset.name]: e.target.value });
-      const form = e.target.form;
-      form.submit()
+    setFilters({
+      ...filters,
+      [e.target.selectedOptions[0].dataset.name]: e.target.value == 'false' ? false : e.target.value,
+    });
+    dispatch(filterProfilePosts({
+      ...filters,
+      [e.target.selectedOptions[0].dataset.name]: e.target.value == 'false' ? false : e.target.value,
+    }));
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="flex flex-row flex-nowrap bg-gradient bg-sixty-percent-home justify-evenly w-full h-20">
+    <form
+      className="flex flex-row flex-nowrap bg-gradient bg-sixty-percent-home justify-evenly items-center w-full h-20"
+    >
       <div className="flex flex-col justify-center bg-gradient-to-r from-sixty-percent-home via-sixty-percent-description to-sixty-percent-home p-3">
         <label className="text-teal-50 font-semibold">
           Fecha de publicación

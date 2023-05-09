@@ -1,29 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { getUserLogged } from "../../../redux/reducers/userReducer";
 import axios from "axios";
 
-export default function HoverInfo({ Likes, Comments, post_id }) {
+export default function HoverInfo({ post }) {
   const { VITE_PORT } = import.meta.env;
 
   const userLogged = useSelector(getUserLogged);
 
+  useEffect(() => {
+    setLike(
+      post.Likes.find((l) => l.user_id == userLogged[0].id) && post.Likes.length
+        ? true
+        : false
+    );
+    setInfo({
+      likes: post.Likes.length,
+      comments: post.Comments.length,
+    });
+  }, [post]);
+
   const [like, setLike] = useState(
-    Likes.find((like) => like.user_id === userLogged[0].id) ? true : false
+    post.Likes.find((l) => l.user_id == userLogged[0].id) && post.Likes.length
+      ? true
+      : false
   );
 
   const [info, setInfo] = useState({
-    likes: Likes.length,
-    comments: Comments.length,
+    likes: post.Likes.length,
+    comments: post.Comments.length,
   });
 
   async function addLike() {
     try {
       let response = axios.post(
         `http://localhost:${VITE_PORT}/likes/createLike`,
-        { user_id: userLogged[0].id, post_id }
+        { user_id: userLogged[0].id, post_id: post.id }
       );
       if (response) {
         setLike(!like);
@@ -40,9 +54,9 @@ export default function HoverInfo({ Likes, Comments, post_id }) {
   async function removeLike() {
     try {
       let userLike =
-        Likes.find((like) => like.user_id === userLogged[0].id) ||
+        post.Likes.find((like) => like.user_id === userLogged[0].id) ||
         (await axios
-          .get(`http://localhost:${VITE_PORT}/posts/getPostById?id=${post_id}`)
+          .get(`http://localhost:${VITE_PORT}/posts/getPostById?id=${post.id}`)
           .then((response) => {
             return response.data.Likes.find(
               (like) => like.user_id === userLogged[0].id

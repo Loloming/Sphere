@@ -99,17 +99,24 @@ const createFollower = async (req, res) => {
     }
 
   } catch (error) {
+    console.log(error)
     res.status(400).json({ error: error.message });
   }
 };
 
 const deleteFollower = async (req, res) => {
   try {
-    const { id } = req.body;
-    const updated = await deleteModels(Follow, id);
+    const { id } = req.query;
+    console.log(id)
+    const updated = await Follow.destroy({
+      where: {
+        id
+      }
+    });
     res.status(200).json(updated);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.log(error)
+    // res.status(400).json({ error: error.message });
   }
 };
 
