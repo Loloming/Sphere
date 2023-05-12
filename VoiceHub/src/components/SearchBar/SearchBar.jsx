@@ -8,12 +8,12 @@ export default function SearchBar() {
   const navigate = useNavigate();
 
   function handleChange(e) {
-    setSearch(e.target.value.replace(/ /g, '+'))
+    setSearch(e.target.value)
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    navigate(`/search?q=${search}`)
+    navigate(`/search?q=${search.replace(/ /g, '+')}`)
   }
 
   return (

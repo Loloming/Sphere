@@ -28,34 +28,31 @@ export default function SearchResults() {
       setPosts(
         postResponse.data.filter(
           (post) =>
-            post.content.includes(query) ||
-            post.content.includes(query.toLowerCase()) ||
             post.content
               .split("")
               .filter((letra, index, self) => self.indexOf(letra) === index)
               .join("")
-              .includes(query) ||
+              .toLowerCase()
+              .includes(query.toLowerCase()) ||
             post.content
               .split("")
               .filter((letra, index, self) => self.indexOf(letra) === index)
               .join("")
-              .includes(query.toLowerCase())
+              .toLowerCase()
+              .includes(
+                query
+                  .split("")
+                  .filter((letra, index, self) => self.indexOf(letra) === index)
+                  .join("")
+                  .toLowerCase()
+              )
         )
       );
       setUsers(
         userResponse.data.filter(
           (user) =>
-            user.username.includes(query) ||
-            user.username.includes(query.toLowerCase()) ||
-            user.username.toLowerCase().includes(query) ||
             user.username.toLowerCase().includes(query.toLowerCase()) ||
-            user.name.includes(query) ||
-            user.name.includes(query.toLowerCase()) ||
-            user.name.toLowerCase().includes(query) ||
             user.name.toLowerCase().includes(query.toLowerCase()) ||
-            user.lastname.includes(query) ||
-            user.lastname.includes(query.toLowerCase()) ||
-            user.lastname.toLowerCase().includes(query) ||
             user.lastname.toLowerCase().includes(query.toLowerCase())
         )
       );
@@ -67,11 +64,15 @@ export default function SearchResults() {
   return (
     <div className="flex flex-col h-full justify-start bg-gradient-to-b from-sixty-percent-home to-sixty-percent min-h-screen">
       <Header />
-      {!users[0] && !posts[0] && <h3 className="text-teal-50 text-2xl font-semibold">Nothing founded</h3>}
+      {!users[0] && !posts[0] && (
+        <h3 className="text-teal-50 text-2xl font-semibold">Nothing founded</h3>
+      )}
       {users[0] && <Users users={users} />}
       {posts[0] && (
         <>
-          <h3 className="text-teal-50 text-2xl font-semibold">Posts that may coincide with your search</h3>
+          <h3 className="text-teal-50 text-2xl font-semibold">
+            Posts that may coincide with your search
+          </h3>
           <div className="grid grid-cols-posts h-full w-full my-4">
             <div></div>
             <div>
