@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../App.css";
+import { useNavigate } from "react-router";
 
 export default function SearchBar() {
+  const [search, setSearch] = useState("");
+
+  const navigate = useNavigate();
+
+  function handleChange(e) {
+    setSearch(e.target.value.replace(/ /g, '+'))
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    navigate(`/search?q=${search}`)
+  }
+
   return (
-    <form className="flex flex-row h-8">
+    <form onSubmit={handleSubmit} className="flex flex-row h-8">
       <input
+        value={search}
+        onChange={handleChange}
         type="text"
         className="mx-0 focus:outline-none rounded-tl-md border-none rounded-bl-md h-8"
       ></input>

@@ -9,6 +9,7 @@ import Chats from "./components/Chats/Chats";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserLogged, loginUser } from "./redux/reducers/userReducer";
+import SearchResults from "./components/SearchResults/SearchResults";
 
 function App() {
   const dispatch = useDispatch();
@@ -39,6 +40,7 @@ function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/chats/chat/:chatId" element={<Chat />} />
       <Route path="/chats" element={<Chats />} />
+      <Route path="/search" element={<SearchResults />} />
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
   );
