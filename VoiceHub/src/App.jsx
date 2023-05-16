@@ -9,10 +9,10 @@ import Chats from "./components/Chats/Chats";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserLogged, loginUser } from "./redux/reducers/userReducer";
+import SearchResults from "./components/SearchResults/SearchResults";
 
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const cookieUser = Cookies.get("uT");
 
@@ -36,10 +36,11 @@ function App() {
       {cookieUser || (validation && userLogged[0]) ? null : (
         <Route path="/" element={<LandinPage />} />
       )}
-      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/:username" element={<Profile />} />
       <Route path="/home" element={<Home />} />
       <Route path="/chats/chat/:chatId" element={<Chat />} />
       <Route path="/chats" element={<Chats />} />
+      <Route path="/search" element={<SearchResults />} />
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
   );

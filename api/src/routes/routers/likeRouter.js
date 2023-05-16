@@ -20,6 +20,6 @@ likeRouter.post("/restoreLike", restoreLike);
 
 likeRouter.put("/putLike", putLike);
 
-likeRouter.delete("/deleteLike", deleteLike);
+likeRouter.delete("/deleteLike/:id", deleteLike);
 
 module.exports = likeRouter;

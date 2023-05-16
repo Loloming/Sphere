@@ -76,8 +76,12 @@ const putLike = async (req, res) => {
 
 const deleteLike = async (req, res) => {
   try {
-    const { id } = req.body;
-    const updated = await deleteModels(Like, id);
+    const { id } = req.params;
+    const updated = await Like.destroy({
+      where: {
+        id
+      }
+    });
     res.status(200).json(updated);
   } catch (error) {
     res.status(400).json({ error: error.message });

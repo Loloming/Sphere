@@ -1,16 +1,19 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import pp from "../../../assets/default.png";
 import { getUserLogged } from "../../../redux/reducers/userReducer";
 import { MdSend } from "react-icons/md";
 import axios from "axios";
+import { getPosts } from "../../../redux/reducers/postReducer";
 
 export default function SendComment({ post_id }) {
   const { VITE_PORT } = import.meta.env;
   const userLogged = useSelector(getUserLogged);
 
+  const dispatch = useDispatch();
+
   const [comment, setComment] = useState({
-    user_id: userLogged[0].id,
+    user_id: userLogged && userLogged[0] && userLogged[0].id || null,
     post_id,
     content: "",
   });
@@ -28,6 +31,7 @@ export default function SendComment({ post_id }) {
         .then((response) => {
           if (response.data === "Succesfully posted!") {
             setComment({ user_id: userLogged[0].id, post_id, content: "" });
+            dispatch(getPosts());
           }
         });
     } catch (error) {

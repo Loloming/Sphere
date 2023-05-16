@@ -4,7 +4,7 @@ const userRouter = Router();
 const {
   getUser,
   getUserById,
-  getUserByEmail,
+  getUserByUsername,
   registerUser,
   loginUser,
   putUser,
@@ -16,7 +16,7 @@ userRouter.get("/getUser", getUser);
 
 userRouter.get("/getUserById", getUserById);
 
-userRouter.get("/getUserByEmail", getUserByEmail);
+userRouter.get("/getUserByUsername", getUserByUsername);
 
 userRouter.post("/registerUser", registerUser)
 
