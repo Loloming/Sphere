@@ -53,12 +53,12 @@ const Post = ({ post }) => {
         (await axios
           .get(`http://localhost:${VITE_PORT}/posts/getPostById?id=${id}`)
           .then((response) => {
-            console.log(response)
+            console.log(response);
             return response.data.Likes.find(
               (like) => like.user_id === userLogged[0].id
             );
           }));
-          console.log(userLike);
+      console.log(userLike);
       if (userLike) {
         let response = axios.delete(
           `http://localhost:${VITE_PORT}/likes/deleteLike/${userLike.id}`
@@ -68,6 +68,25 @@ const Post = ({ post }) => {
           setLike(!like);
         }
       }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleShare() {
+    try {
+      let response = await axios.post(
+        `http://localhost:${VITE_PORT}/reposts/createRepost`,
+        {
+          post_id: id,
+          user_id: userLogged[0]?.id,
+        }
+      );
+      let getReposts = await axios.get(
+        `http://localhost:${VITE_PORT}/reposts/getRepost`
+      );
+      console.log(response);
+      console.log(getReposts);
     } catch (error) {
       console.log(error);
     }
@@ -146,16 +165,13 @@ const Post = ({ post }) => {
             </button>
           )}
           <button>
-            <FaShare
-              className="text-ten-percent"
-              title="Ver todos los comentarios"
-              size={25}
-            />
+            <FaShare className="text-ten-percent" title="Re-send" size={25} />
           </button>
           <button>
             <FaShareAlt
               className="text-ten-percent"
-              title="Ver todos los comentarios"
+              title="Share"
+              onClick={handleShare}
               size={25}
             />
           </button>

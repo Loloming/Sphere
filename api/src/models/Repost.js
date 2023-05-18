@@ -2,15 +2,12 @@ const { DataTypes, Sequelize } = require("sequelize");
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "Message",
+    "Repost",
     {
-      content: {
-        type: DataTypes.STRING,
-        allowNull: false
-      }
     },
     {
-      timestamps: true
+      paranoid: true,
+      timestamps: true,
     }
   );
 };

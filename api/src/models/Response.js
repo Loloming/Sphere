@@ -2,7 +2,7 @@ const { DataTypes, Sequelize } = require("sequelize");
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "Message",
+    "Response",
     {
       content: {
         type: DataTypes.STRING,
@@ -10,7 +10,8 @@ module.exports = (sequelize) => {
       }
     },
     {
-      timestamps: true
+      paranoid: true,
+      timestamps: true,
     }
   );
 };
