@@ -5,7 +5,7 @@ import { handleFiles } from "./handleFiles";
 export async function handleSubmit(e, messages, message, userLogged, audio, files, setAudio, setMessage, setFiles, socket, chatId) {
     e.preventDefault();
     if (!messages) {
-      setMessages([
+      setMessage([
         {
           user: userLogged[0].id,
           content: message,
