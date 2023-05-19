@@ -4,7 +4,7 @@ import { getUserLogged } from "../../../redux/reducers/userReducer";
 import SendAudio from "../../Upload/Audio/SendAudio";
 import { handleSubmit } from "../utils/handleSubmit";
 
-export default function SendMessage({ messages, message, audio, files, setAudio, setMessage, setFiles, socket, chatId }) {
+export default function SendMessage({ messages, message, audio, files, setAudio, setMessages, setMessage, setFiles, socket, chatId }) {
 
     const userLogged = useSelector(getUserLogged);
 

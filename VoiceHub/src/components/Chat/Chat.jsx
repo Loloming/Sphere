@@ -54,18 +54,34 @@ export default function Chat() {
     }
 
     function receiveMessage(message) {
-      setMessages([
-        ...messages,
-        {
-          user: message.id,
-          content: message.messageData.content,
-          audio:
-            message.messageData.audio ||
-            (message.messageData.Audio && message.messageData.Audio.url) ||
-            null,
-          images: message.messageData.images || null,
-        },
-      ]);
+      setMessages(
+        messages
+          ? [
+              ...messages,
+              {
+                user: message.id,
+                content: message.messageData.content,
+                audio:
+                  message.messageData.audio ||
+                  (message.messageData.Audio &&
+                    message.messageData.Audio.url) ||
+                  null,
+                images: message.messageData.images || null,
+              },
+            ]
+          : [
+              {
+                user: message.id,
+                content: message.messageData.content,
+                audio:
+                  message.messageData.audio ||
+                  (message.messageData.Audio &&
+                    message.messageData.Audio.url) ||
+                  null,
+                images: message.messageData.images || null,
+              },
+            ]
+      );
     }
     if (
       messages &&
@@ -130,6 +146,7 @@ export default function Chat() {
           files={files}
           setAudio={setAudio}
           setMessage={setMessage}
+          setMessages={setMessages}
           setFiles={setFiles}
           socket={socket}
           chatId={chatId}

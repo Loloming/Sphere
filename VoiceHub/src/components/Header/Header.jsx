@@ -18,7 +18,7 @@ export default function Header() {
             <SearchBar />
             <div className="flex flex-row items-center gap-2">
                 <p className="text-teal-50 cursor-pointer" onClick={() => navigate('/chats')}>Chats</p>
-                {userLogged[0] && <img className="rounded-full h-11 w-12 cursor-pointer" src={IMG} onClick={() => navigate(`/profile/${userLogged[0].username}`)}></img>}
+                <img className="rounded-full h-11 w-12 cursor-pointer" src={IMG} onClick={userLogged[0] ? () => navigate(`/profile/${userLogged[0].username}`) : null}></img>
             </div>
         </header>
     )
