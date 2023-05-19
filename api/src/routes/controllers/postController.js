@@ -64,7 +64,49 @@ const getPost = async (req, res) => {
 const getPostById = async (req, res) => {
   try {
     const { id } = req.query;
-    const post = await getModelsById(Post, id);
+    const post = await Post.findOne({
+      where: {
+        id
+      },
+      include: [
+        {
+          model: Comment,
+          attributes: ['id', 'content', 'user_id'],
+          include: [
+            {
+              model: Like
+            },
+            {
+              model: Image
+            },
+            {
+              model: Video
+            },
+            {
+              model: Audio
+            },
+            {
+              model: User
+            }
+          ]
+        },
+        {
+          model: Like
+        },
+        {
+          model: Image
+        },
+        {
+          model: Video
+        },
+        {
+          model: Audio
+        },
+        {
+          model: User
+        }
+      ]
+    })
     res.status(200).json(post);
   } catch (error) {
     res.status(400).json({ error: error.message });

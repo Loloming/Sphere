@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import SendAudio from "./Audio/SendAudio";
 import { RiH4, RiImageAddLine } from "react-icons/ri";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserLogged } from "../../redux/reducers/userReducer";
 import Audio from "../Audio/Audio";
+import { getPosts } from "../../redux/reducers/postReducer";
 
 const { VITE_CLOUD_NAME, VITE_POST_MEDIA_PRESET, VITE_PORT } = import.meta.env;
 
@@ -16,6 +17,7 @@ export default function Upload({ published, setPublished }) {
   const [files, setFiles] = useState([]);
 
   const userLogged = useSelector(getUserLogged);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (images && audio) {
@@ -58,6 +60,7 @@ export default function Upload({ published, setPublished }) {
               })[0] || null,
         });
         setPublished(true);
+        dispatch(getPosts());
       } catch (error) {
         console.log(error);
       }
@@ -71,6 +74,7 @@ export default function Upload({ published, setPublished }) {
           }
         );
         setPublished(true);
+        dispatch(getPosts());
         console.log(response);
       } catch (error) {
         console.log(error);

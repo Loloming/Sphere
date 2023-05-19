@@ -27,7 +27,7 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { User, Post, Comment, Follow, Like, Image, Video, Audio, Chat, Message } = sequelize.models;
+const { User, Post, Comment, Follow, Like, Image, Video, Audio, Chat, Message, Response, Repost } = sequelize.models;
 
 
 
@@ -35,6 +35,8 @@ User.hasMany(Follow, { foreignKey: 'followerId', as: 'following' });
 User.hasMany(Follow, { foreignKey: 'followingId', as: 'followers' });
 User.hasMany(Message);
 User.hasMany(Post);
+User.hasMany(Repost);
+User.hasMany(Response);
 User.belongsToMany(Chat, { through: 'User_Chat' });
 
 Post.belongsToMany(Like, { through: 'Post_Like', onDelete: 'cascade'});
@@ -46,6 +48,7 @@ Post.belongsTo(User);
 
 Comment.belongsToMany(Like, { through: 'Comment_Like', onDelete: 'cascade'});
 Comment.belongsToMany(Image, { through: 'Comment_Image', onDelete: 'cascade'});
+Comment.belongsToMany(Response, { through: 'Comment_Response', onDelete: 'cascade'});
 Comment.hasOne(Video, { onDelete: 'cascade' });
 Comment.hasOne(Audio, { onDelete: 'cascade' });
 Comment.belongsTo(User, { foreignKey: 'user_id' });
@@ -56,6 +59,10 @@ Message.hasOne(Audio, { onDelete: 'cascade' });
 
 Chat.hasMany(Message);
 Chat.belongsToMany(User, { through: 'User_Chat' });
+
+Repost.belongsTo(Post);
+
+Response.belongsTo(Comment);
 
 module.exports = {
   ...sequelize.models, 

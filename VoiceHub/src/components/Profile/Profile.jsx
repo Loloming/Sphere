@@ -5,10 +5,31 @@ import Posts from "../Posts/Posts";
 import { useNavigate, useParams } from "react-router";
 import axios from "axios";
 import { VscLoading } from "react-icons/vsc";
+import {
+  getProfilePosts,
+  setProfilePosts,
+} from "../../redux/reducers/postReducer";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  changeUserProperty,
+  getUserLogged,
+} from "../../redux/reducers/userReducer";
+import { AiOutlineEdit } from "react-icons/ai";
+import { MdOutlineDone } from "react-icons/md";
 
 export default function Profile() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userPosts = useSelector(getProfilePosts);
+  const userLogged = useSelector(getUserLogged);
   const [user, setUser] = useState(null);
+  const [prevUsername, setPrevUsername] = useState(null);
+  const [isFollowed, setIsFollowed] = useState(null);
+
+  const [usernameIsChanging, setUsernameIsChanging] = useState(false);
+  const [descriptionIsChanging, setDescriptionIsChanging] = useState(false);
+  const [newUsername, setNewUsername] = useState(user?.username);
+  const [newDescription, setNewDescription] = useState(user?.description);
 
   const { VITE_PORT } = import.meta.env;
   const { username } = useParams();
@@ -20,6 +41,10 @@ export default function Profile() {
       );
       if (response.data && response.data.username) {
         setUser(response.data);
+        setNewUsername(response.data.username);
+        setNewDescription(response.data.description);
+        setPrevUsername(response.data.username);
+        dispatch(setProfilePosts(response.data.Posts));
       } else {
         navigate("/home");
       }
@@ -28,23 +53,76 @@ export default function Profile() {
     }
   }
 
-  useEffect(() => {
-    if (!user && username) {
-      getUser(username);
-    } else if (!username) {
-      navigate("/home");
+  async function follow() {
+    try {
+      let response = await axios.post(
+        `http://localhost:${VITE_PORT}/followers/createFollower`,
+        {
+          follower_id: userLogged[0].id,
+          user_id: user.id,
+        }
+      );
+      if (response.data) {
+        setIsFollowed(true);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  }, [user]);
+  }
+
+  async function unfollow() {
+    try {
+      const followId = user.followers.find(
+        (follower) => follower.followerId === userLogged[0].id
+      ).id;
+      let response = await axios.delete(
+        `http://localhost:${VITE_PORT}/followers/deleteFollower?id=${followId}`
+      );
+      if (response.data) {
+        setIsFollowed(false);
+      }
+    } catch (error) {}
+  }
 
   const getLikes = (userSelected) => {
     var likes = 0;
-    userSelected.Posts.map((post) => {
+    userSelected?.Posts?.map((post) => {
       likes += post.Likes.length;
     });
     return likes;
   };
 
-  console.log(username);
+  const handleUsername = async (e) => {
+    e.preventDefault();
+    setUser({ ...user, username: newUsername });
+    setUsernameIsChanging(!usernameIsChanging);
+    dispatch(changeUserProperty({ id: user.id, username: newUsername }));
+  };
+
+  const handleDescription = (e) => {
+    e.preventDefault();
+    setUser({ ...user, description: newDescription });
+    setDescriptionIsChanging(!descriptionIsChanging);
+    dispatch(changeUserProperty({ id: user.id, description: newDescription }));
+  };
+
+  useEffect(() => {
+    if (user && userLogged[0]) {
+      console.log("hehe");
+      setIsFollowed(
+        user.followers?.find(
+          (follower) => follower.followerId === userLogged[0]?.id
+        )
+          ? true
+          : false
+      );
+    }
+    if ((username && !user) || username !== prevUsername) {
+      getUser(username);
+    } else if (!username) {
+      navigate("/home");
+    }
+  }, [username, user]);
 
   const IMG = "http://www.clipartbest.com/cliparts/niB/Mx8/niBMx87xT.gif";
   const BANNER =
@@ -69,38 +147,114 @@ export default function Profile() {
                 </div>
                 <div className="text-teal-50 font-semibold w-1/2 flex flex-col items-center">
                   <h4>Followers</h4>
-                  <h4>{user ? user.followers.length : "loading..."}</h4>
+                  <h4>{user ? user?.followers?.length : "loading..."}</h4>
                 </div>
               </div>
               <div className="flex flex-row w-1/4 flex-nowrap">
                 <div className="text-teal-50 font-semibold w-1/2 flex flex-col items-center">
                   <h4>Followed</h4>
-                  <h4>{user ? user.following.length : "loading..."}</h4>
+                  <h4>{user ? user?.following?.length : "loading..."}</h4>
                 </div>
                 <div className="text-teal-50 font-semibold w-1/2 flex flex-col items-center">
                   <h4>Posts</h4>
-                  <h4>{user ? user.Posts.length : "loading..."}</h4>
+                  <h4>{user ? user?.Posts?.length : "loading..."}</h4>
                 </div>
               </div>
             </div>
           </div>
           <div className="bg-gradient-to-b from-sixty-percent-description to-sixty-percent h-32 w-full flex flex-row flex-wrap justify-center z-30 shadow-xl">
             <div className="w-full flex flex-row justify-center items-center">
-              <h2 className="text-teal-50 font-semibold text-xl my-1">
-                {(user && user.username) || "loading..."}
-              </h2>
+              {!usernameIsChanging ? (
+                <h2
+                  className={
+                    userLogged[0]?.id === user.id
+                      ? "ml-7 mr-1 text-teal-50 font-semibold text-xl my-1"
+                      : "text-teal-50 font-semibold text-xl my-1"
+                  }
+                >
+                  {(user && user.username) || "loading..."}
+                </h2>
+              ) : (
+                <form onSubmit={handleUsername} className="w-fit">
+                  <input
+                    type="text"
+                    value={newUsername}
+                    onChange={(e) => setNewUsername(e.target.value)}
+                    className="ml-11 text-center text-teal-50 bg-transparent w-32 outline-none font-semibold text-xl my-1"
+                  ></input>
+                  <button>
+                    <MdOutlineDone className="text-gray-500" size={15} />
+                  </button>
+                </form>
+              )}
+              {userLogged[0]?.id === user.id && (
+                <AiOutlineEdit
+                  onClick={() => setUsernameIsChanging(!usernameIsChanging)}
+                  className="cursor-pointer text-gray-400 opacity-50"
+                  size={25}
+                />
+              )}
             </div>
             <div className="w-full flex flex-row justify-center px-3">
-              <p className="text-neutral-400 inline-block text-center font-normal shadow-xl z-10">
-                {user && user.description}
-              </p>
+              {!descriptionIsChanging ? (
+                <p
+                  className={
+                    userLogged[0]?.id === user.id
+                      ? "ml-7 mr-1 text-neutral-400 inline-block text-center font-normal shadow-xl z-10"
+                      : "text-neutral-400 inline-block text-center font-normal shadow-xl z-10"
+                  }
+                >
+                  {user && user.description}
+                </p>
+              ) : (
+                <form onSubmit={handleDescription} className="w-fit h-full flex items-start justify-center">
+                   <input
+                    type="text"
+                    value={newDescription}
+                    onChange={(e) => setNewDescription(e.target.value)}
+                    className="ml-7 mr-1 text-neutral-400 bg-transparent outline-none w-fit text-center font-normal shadow-xl z-10"
+                  ></input>
+                  <button>
+                    <MdOutlineDone className="text-gray-500" size={15} />
+                  </button>
+                </form>
+              )}
+              {userLogged[0]?.id === user.id && (
+                <AiOutlineEdit
+                  onClick={() =>
+                    setDescriptionIsChanging(!descriptionIsChanging)
+                  }
+                  className="cursor-pointer text-gray-400 opacity-50"
+                  size={15}
+                />
+              )}
             </div>
+            {userLogged &&
+              userLogged[0] &&
+              user &&
+              user.id !== userLogged[0]?.id && (
+                <div className="flex">
+                  <button
+                    onClick={isFollowed ? unfollow : follow}
+                    className={
+                      isFollowed
+                        ? "bg-ten-percent text-teal-50 flex items-center rounded-lg text-sm h-7 px-0.5 mx-2"
+                        : "bg-gray-500 text-teal-50 flex items-center rounded-lg text-sm h-7 px-0.5 mx-2"
+                    }
+                  >
+                    {isFollowed ? "Following" : "Follow"}
+                  </button>
+                  <button className="bg-ten-percent text-teal-50 flex items-center rounded-lg text-sm h-7 px-0.5 mx-2">
+                    Message
+                  </button>
+                </div>
+              )}
           </div>
           <div className="grid grid-cols-posts w-full h-full">
             <div className="bg-gradient-to-b from-sixty-percent to-sixty-percent-banner shadow-2xl h-full text-center z-50"></div>
-            <div className="bg-gradient-to-t from-sixty-percent-home to-sixty-percent flex flex-col h-fit text-center">
+            <div className="bg-gradient-to-t from-sixty-percent-home to-sixty-percent flex flex-col text-center h-max">
               <Filters />
-              {user && user.Posts && <Posts posts={user.Posts} />}
+              {user && user.Posts && <Posts posts={userPosts} isGrid={true} />}
             </div>
             <div className="bg-gradient-to-b from-sixty-percent to-sixty-percent-banner shadow-2xl  h-full text-center z-50"></div>
           </div>
