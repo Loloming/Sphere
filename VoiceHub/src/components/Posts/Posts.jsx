@@ -11,7 +11,7 @@ const Posts = ({posts, isGrid}) => {
 
   return (
     <div className={isGrid ? 'grid grid-cols-5 grid-rows-3 justify-center items-center h-full overflow-x-hidden overflow-y-auto' : 'flex flex-col w-full items-center'}>
-      {!isGrid && posts[0] ? posts?.map((post, id) => {
+      {!isGrid && posts && posts[0] ? posts?.map((post, id) => {
         return (
           <Post key={id} post={post} />
         )
