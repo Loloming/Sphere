@@ -8,7 +8,7 @@ const {
   addUsers,
   deleteChat,
   restoreChat
-} = require("../controllers/ChatController");
+} = require("../controllers/chatController.js");
 
 chatRouter.get("/getChat", getChat);
 
