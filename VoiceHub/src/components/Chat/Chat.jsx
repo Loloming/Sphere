@@ -32,8 +32,8 @@ export default function Chat() {
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    socket.on("usersRoom", (users) =>{
-      setPeers(users)
+    socket.on("usersRoom", (users) => {
+      setPeers(users);
     });
     return () => socket.off("usersRoom");
   }, []);
@@ -84,10 +84,10 @@ export default function Chat() {
               content: m.content,
               audio: m.audio || (m.Audio && m.Audio.url) || null,
               images: m.images || m.Images,
-              id: m.id
+              id: m.id,
             });
           });
-          if (dbMessages.length) {       
+          if (dbMessages.length) {
             setMessages(dbMessages.sort((a, b) => a.id - b.id));
           } else {
             setMessages(null);
@@ -115,12 +115,7 @@ export default function Chat() {
       <div className="flex flex-col justify-center align-middle bg-sixty-percent h-screen p-10 gap-5">
         <div className="flex flex-row justify-between">
           <Info chat={chat} />
-          {peer && peers && (
-            <Streaming
-              chat={chat}
-              peers={peers}
-            />
-          )}
+          {peer && peers && <Streaming chat={chat} peers={peers} />}
         </div>
         <Messages messages={messages} chat={chat} myRef={myRef} />
         <SendMessage
