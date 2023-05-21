@@ -13,7 +13,7 @@ module.exports = {
         "ten-percent": "#8B30FF",
       },
       gridTemplateColumns: {
-        posts: "1fr 4fr 1fr",
+        posts: "1fr 4fr 1fr"
       },
     },
   },

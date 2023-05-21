@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import LandinPage from "./components/LandingPage/LandingPage";
 import "./App.css";
 import Home from "./components/Home/Home";
@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserLogged, loginUser } from "./redux/reducers/userReducer";
 import SearchResults from "./components/SearchResults/SearchResults";
+import PostDetail from "./components/PostDetail/PostDetail";
 
 function App() {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ function App() {
       <Route path="/chats/chat/:chatId" element={<Chat />} />
       <Route path="/chats" element={<Chats />} />
       <Route path="/search" element={<SearchResults />} />
+      <Route path="/post/:id" element={<PostDetail />} />
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
   );

@@ -1,4 +1,4 @@
-const { Post, User, Comment, Like, Image, Video, Audio } = require("../../db");
+const { Post, User, Comment, Like, Image, Video, Audio, Reply } = require("../../db");
 const bcryptjs = require("bcryptjs");
 const {
   postModels,
@@ -34,6 +34,9 @@ const getPost = async (req, res) => {
             },
             {
               model: User
+            },
+            {
+              model: Reply
             }
           ]
         },
@@ -87,6 +90,26 @@ const getPostById = async (req, res) => {
             },
             {
               model: User
+            },
+            {
+              model: Reply,
+              include: [
+                {
+                  model: Like
+                },
+                {
+                  model: Image
+                },
+                {
+                  model: Video
+                },
+                {
+                  model: Audio
+                },
+                {
+                  model: User
+                }
+              ]
             }
           ]
         },

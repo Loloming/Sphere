@@ -17,7 +17,7 @@ export default function SearchBar() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-row h-8">
+    <form onSubmit={handleSubmit} className="flex flex-row h-8 w-full justify-center">
       <input
         value={search}
         onChange={handleChange}

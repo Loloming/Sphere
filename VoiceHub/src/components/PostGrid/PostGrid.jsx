@@ -13,7 +13,7 @@ export default function PostGrid({ post }) {
 
   if (post.Images[0]) {
     return (
-      <div className="h-full w-full aspect-square group cursor-pointer transition duration-300 hover:scale-110">
+      <div className="aspect-square max-h-34 group cursor-pointer transition duration-300 hover:scale-110">
         <Image className={"w-full h-full"} cloudName={VITE_CLOUD_NAME} publicId={post.Images[0].url} alt="noimg">
           <Transformation aspectRatio="1:1" crop="fill"/>
         </Image>
@@ -29,7 +29,7 @@ export default function PostGrid({ post }) {
     );
   } else {
     return (
-      <div className="w-full h-full aspect-square group cursor-pointer transition hover:scale-110 flex justify-center items-center bg-gradient-to-tr from-purple-500 via-purple-600 to-ten-percent font-medium text-teal-50">
+      <div className="aspect-square max-h-34 group cursor-pointer transition hover:scale-110 flex justify-center items-center bg-gradient-to-tr from-purple-500 via-purple-600 to-ten-percent font-medium text-teal-50">
         {post.content.slice(0, 23)}
         {userLogged && userLogged[0] && <HoverInfo post={post} />}
       </div>

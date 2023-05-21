@@ -1,12 +1,12 @@
-const { Response, Post, User, Message, Video, Audio, Image } = require("../../db");
+const { Reply, Post, Comment, User, Message, Video, Audio, Image } = require("../../db");
 const {
   deleteModels,
   restoreModels
 } = require("../utils/mainUtils");
 
-const getResponse = async (req, res) => {
+const getReply = async (req, res) => {
   try {
-    const response = await Response.findAll({
+    const response = await Reply.findAll({
       include: [
         {
           model: Post
@@ -20,10 +20,10 @@ const getResponse = async (req, res) => {
 };
 
 
-const getResponseById = async (req, res) => {
+const getReplyById = async (req, res) => {
   try {
     const { id } = req.query;
-    const response = await Response.findOne({
+    const response = await Reply.findOne({
       where: {
         id: id
       },
@@ -39,17 +39,35 @@ const getResponseById = async (req, res) => {
   }
 };
 
-const createResponse = async (req, res) => {
+const createReply = async (req, res) => {
   try {
-    const { comment_id, user_id } = req.body;
+    const { comment_id, user_id, content } = req.body;
 
-    const response = await Response.create({
+    console.log(comment_id, user_id, content)
+
+    const reply = await Reply.create({
       CommentId: comment_id,
-      UserId: user_id
+      user_id,
+      content
     });
 
-    if (response) {
-      res.status(200).json(response);
+    const comment = await Comment.findOne({
+      where: {
+        id: comment_id
+      }
+    });
+
+    const user = await User.findOne({
+      where: {
+        id: user_id
+      }
+    });
+
+    await comment.addReply(reply);
+    // await reply.addUser(user);
+
+    if (reply) {
+      res.status(200).json(reply);
     } else {
       res.status(400).send("Response couldn't be posted");
     }
@@ -59,20 +77,20 @@ const createResponse = async (req, res) => {
   }
 };
 
-const deleteResponse = async (req, res) => {
+const deleteReply = async (req, res) => {
   try {
     const { id } = req.body;
-    const updated = await deleteModels(Response, id);
+    const updated = await deleteModels(Reply, id);
     res.status(200).json(updated);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-const restoreResponse = async (req, res) => {
+const restoreReply = async (req, res) => {
   try {
     const { id } = req.body;
-    const restored = await restoreModels(Response, id);
+    const restored = await restoreModels(Reply, id);
     res.status(200).json(restored);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -80,9 +98,9 @@ const restoreResponse = async (req, res) => {
 };
 
 module.exports = {
-  getResponse,
-  getResponseById,
-  createResponse,
-  deleteResponse,
-  restoreResponse
+  getReply,
+  getReplyById,
+  createReply,
+  deleteReply,
+  restoreReply
 };

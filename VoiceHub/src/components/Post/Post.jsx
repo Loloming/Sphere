@@ -29,8 +29,6 @@ const Post = ({ post }) => {
     post.Likes.find((like) => like.user_id === userLogged[0]?.id) ? true : false
   );
 
-  const [comment, setComment] = useState(false);
-
   async function addLike() {
     try {
       let response = axios.post(
@@ -92,10 +90,6 @@ const Post = ({ post }) => {
     }
   }
 
-  function commenter() {
-    setComment(!comment);
-  }
-
   return (
     <div
       className="flex flex-row bg-gradient-to-tl from-sixty-percent to-thirty-percent rounded-lg p-4 w-full h-fit my-3"
@@ -147,8 +141,8 @@ const Post = ({ post }) => {
             </p>
           </div>
         )}
-        <div className="flex mt-4 gap-12 justify-center">
-          <button onClick={() => commenter()}>
+        <div className="flex mt-4 mb-4 gap-12 justify-center">
+          <button onClick={() => navigate(`/post/${id}`)}>
             <MdAddComment
               className="text-ten-percent"
               title="Ver todos los comentarios"
