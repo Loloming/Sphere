@@ -6,20 +6,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserLogged } from "../../redux/reducers/userReducer";
 import Audio from "../Audio/Audio";
 import { getPosts } from "../../redux/reducers/postReducer";
+import Post from "../Post/Post";
 
 const { VITE_CLOUD_NAME, VITE_POST_MEDIA_PRESET, VITE_PORT } = import.meta.env;
 
-export default function Upload({ published, setPublished }) {
+export default function Upload({ published, setPublished, sharing }) {
   const [images, setImages] = useState();
   const [content, setContent] = useState("");
   const [audio, setAudio] = useState();
 
   const [files, setFiles] = useState([]);
 
+  const [sharingPost, setSharingPost] = useState(null);
+
   const userLogged = useSelector(getUserLogged);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    async function getSharingPost() {
+      try {
+        let response = await axios.get(
+          `http://localhost:${VITE_PORT}/posts/getPostById?id=${sharing}`
+        );
+        setSharingPost(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (sharing && !sharingPost) {
+      getSharingPost();
+    }
     if (images && audio) {
       setFiles([...images, audio]);
     } else if (images) {
@@ -27,7 +43,7 @@ export default function Upload({ published, setPublished }) {
     } else if (audio) {
       setFiles([audio]);
     }
-  }, [images, audio]);
+  }, [images, audio, sharing]);
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -45,6 +61,7 @@ export default function Upload({ published, setPublished }) {
         const responses = await Promise.all(uploadRequests);
         axios.post(`http://localhost:${VITE_PORT}/posts/createPost`, {
           content,
+          sharing: sharingPost?.id,
           user_id: userLogged[0].id,
           images:
             responses
@@ -70,9 +87,21 @@ export default function Upload({ published, setPublished }) {
           `http://localhost:${VITE_PORT}/posts/createPost`,
           {
             content,
+            sharing: sharingPost?.id,
             user_id: userLogged[0].id,
           }
         );
+        const shared =
+          sharingPost &&
+          (await axios.post(
+            `http://localhost:${VITE_PORT}/reposts/createRepost`,
+            {
+              post_id: response.data.id,
+              sharing_id: sharingPost?.id,
+              user_id: userLogged[0].id,
+            }
+          ));
+        console.log(shared);
         setPublished(true);
         dispatch(getPosts());
         console.log(response);
@@ -83,13 +112,22 @@ export default function Upload({ published, setPublished }) {
   };
 
   return (
-    <form className="flex flex-col items-center justify-around bg-gradient-to-b from-sixty-percent to-sixty-percent-home shadow-2xl rounded-lg p-2 w-3/4 max-w-screen-md h-72 z-50">
+    <form className="flex flex-col items-center justify-around bg-gradient-to-b from-sixty-percent to-sixty-percent-home shadow-2xl rounded-lg p-2 w-3/4 max-w-screen-md z-50 overflow-y-auto">
       <div className="flex w-full px-6 items-center justify-between">
         <h1 className="text-white text-left font-bold text-xl">
-          Create a new post
+          {sharingPost ? "Share" : "Create a new post"}
         </h1>
-        {published ? <h4 className="text-green-600">Succesfully posted!</h4> : <></>}
+        {published ? (
+          <h4 className="text-green-600">Succesfully posted!</h4>
+        ) : (
+          <></>
+        )}
       </div>
+      {sharingPost && (
+        <div className="h-fit w-1/2">
+          <Post post={sharingPost} />
+        </div>
+      )}
       <div className="w-full flex justify-center px-6">
         <input
           type="text"

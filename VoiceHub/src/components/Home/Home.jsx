@@ -14,6 +14,8 @@ export default function Home() {
     dispatch(getPosts());
   }, []);
 
+  console.log(posts)
+
   return (
     <div className="flex flex-col h-full justify-start bg-gradient-to-b from-sixty-percent-home to-sixty-percent min-h-screen">
       <Header />

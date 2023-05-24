@@ -39,15 +39,37 @@ const getRepostById = async (req, res) => {
   }
 };
 
+// Se crea un post compartiendo otro. El post que comparte tiene la propiedad "Sharing"
+// Al crearse ese post, tenemos que agregarle su ID a la propiedad "Reposts" del post que
+// está siendo compartido
+// post_id sería el post que comparte
+// sharing_id sería el post que está compartiendo
+// user_id es el user que lo comparte
+
+
 const createRepost = async (req, res) => {
   try {
-    const { post_id, user_id } = req.body;
+    const { post_id, sharing_id, user_id } = req.body;
+
+    console.log(post_id, user_id)
+
+    // Se crea el repost con el id del user y del post que comparte
 
     const repost = await Repost.create({
-      PostId: post_id,
-      UserId: user_id
+      sharingPost_id: post_id, // Cambiar el nombre de la propiedad a "sharingPost_id"
+      user_id
     });
 
+    // Se busca el post que está siendo compartido para agregarle el repost
+
+    const post = await Post.findOne({
+      where: {
+        id: sharing_id
+      }
+    })
+
+    await post.addRepost(repost); // Se añade
+    
     if (repost) {
       res.status(200).json(repost);
     } else {

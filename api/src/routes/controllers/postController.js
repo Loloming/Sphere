@@ -1,4 +1,4 @@
-const { Post, User, Comment, Like, Image, Video, Audio, Reply } = require("../../db");
+const { Post, User, Comment, Like, Image, Video, Audio, Reply, Repost, Sharing } = require("../../db");
 const bcryptjs = require("bcryptjs");
 const {
   postModels,
@@ -39,6 +39,12 @@ const getPost = async (req, res) => {
               model: Reply
             }
           ]
+        },
+        {
+          model: Sharing
+        },
+        {
+          model: Repost,
         },
         {
           model: Like
@@ -138,7 +144,7 @@ const getPostById = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const { images, videos, audio, content, user_id } = req.body;
+    const { images, videos, audio, sharing, content, user_id } = req.body;
     const post = await Post.create({
       content,
       UserId: user_id
@@ -165,8 +171,14 @@ const createPost = async (req, res) => {
       })
       await post.setAudio(audio_)
     };
+    if (sharing) {
+      const sharing_ = await Sharing.create({
+        sharing_id: sharing
+      });
+      await post.setSharing(sharing_);
+    }
     if (post) {
-      res.status(200).send("Succesfully posted!");
+      res.status(200).json(post);
     } else {
       res.status(400).send("Post couldn't be created");
     }

@@ -14,7 +14,7 @@ export default function Comments({ comments, post_id, isDetail, isReplying }) {
 
   return (
     <div className="w-full">
-      <div className={!isDetail && comments && comments[0] ? hasComments : noComments || isDetail && comments && comments[0] ? isDetailedWithComments : isDetailedWithoutComments}>
+      <div className={!isDetail && comments && comments[0] && hasComments || !isDetail && noComments || isDetail && comments && comments[0] && isDetailedWithComments || isDetail && isDetailedWithoutComments}>
         {comments && comments[0] ? (
           comments.map((comment, index) => {
             return (
